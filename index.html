@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Goat Server — Enterprise VPN Management</title>
-    <!-- Tailwind CSS Play CDN & Inter Font -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -42,13 +41,7 @@
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        .light .glass-panel {
-            background: rgba(255, 255, 255, 0.85);
-            border: 1px solid rgba(0, 0, 0, 0.06);
-        }
-        .gradient-border {
-            background: linear-gradient(135deg, #4F46E5, #6366F1, #9333EA);
-        }
+        .gradient-border { background: linear-gradient(135deg, #4F46E5, #6366F1, #9333EA); }
         .gradient-text {
             background: linear-gradient(135deg, #6366F1, #A855F7, #EC4899);
             -webkit-background-clip: text;
@@ -58,9 +51,9 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="bg-lightBg dark:bg-darkBg text-slate-900 dark:text-slate-100 font-sans antialiased selection:bg-primary selection:text-white transition-colors duration-300">
+<body class="bg-darkBg text-slate-100 font-sans antialiased selection:bg-primary selection:text-white transition-colors duration-300">
 
-    <!-- ================= LOGIN SCREEN ================= -->
+    <!-- LOGIN SCREEN -->
     <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-darkBg">
         <div class="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-purple-600/15 pointer-events-none"></div>
         <div class="glass-panel p-8 rounded-3xl border border-slate-700/60 max-w-md w-full shadow-glass space-y-6 relative z-10">
@@ -69,7 +62,7 @@
                     <i data-lucide="shield-check" class="w-8 h-8 text-white"></i>
                 </div>
                 <h1 class="text-2xl font-bold tracking-tight gradient-text">Goat Server</h1>
-                <p class="text-xs text-slate-400">ورود به پنل مدیریت اختصاصی ادمین‌ها</p>
+                <p class="text-xs text-slate-400">ورود به پنل مدیریت ادمین‌ها</p>
             </div>
 
             <div class="space-y-4">
@@ -79,7 +72,7 @@
                         <span class="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none text-slate-400">
                             <i data-lucide="user" class="w-4 h-4"></i>
                         </span>
-                        <input type="text" id="login-username" placeholder="Goathszz" class="w-full bg-slate-900/80 border border-slate-700 rounded-xl pr-10 pl-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-primary transition-all">
+                        <input type="text" id="login-username" placeholder="Goathszz یا نام ادمین" class="w-full bg-slate-900/80 border border-slate-700 rounded-xl pr-10 pl-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-primary">
                     </div>
                 </div>
 
@@ -89,7 +82,7 @@
                         <span class="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none text-slate-400">
                             <i data-lucide="lock" class="w-4 h-4"></i>
                         </span>
-                        <input type="password" id="login-password" placeholder="••••••••" class="w-full bg-slate-900/80 border border-slate-700 rounded-xl pr-10 pl-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-primary transition-all">
+                        <input type="password" id="login-password" placeholder="رمز عبور" class="w-full bg-slate-900/80 border border-slate-700 rounded-xl pr-10 pl-4 py-3 text-xs text-slate-200 focus:outline-none focus:border-primary">
                     </div>
                 </div>
 
@@ -102,39 +95,40 @@
         </div>
     </div>
 
-    <!-- ================= MAIN APP CONTAINER ================= -->
+    <!-- MAIN APP CONTAINER -->
     <div id="main-app" class="flex h-screen overflow-hidden hidden">
 
-        <!-- SIDEBAR (Desktop) -->
-        <aside id="sidebar" class="hidden md:flex flex-col w-64 glass-panel border-r border-slate-200 dark:border-slate-800 transition-all duration-300 z-30">
-            <div class="flex items-center justify-between px-6 py-5 border-b border-slate-200/50 dark:border-slate-800/50">
+        <!-- SIDEBAR -->
+        <aside class="hidden md:flex flex-col w-64 glass-panel border-r border-slate-800 transition-all duration-300 z-30">
+            <div class="flex items-center justify-between px-6 py-5 border-b border-slate-800">
                 <div class="flex items-center space-x-3 space-x-reverse">
                     <div class="w-9 h-9 rounded-xl gradient-border flex items-center justify-center shadow-glow">
                         <i data-lucide="shield-check" class="w-5 h-5 text-white"></i>
                     </div>
                     <div>
                         <h1 class="font-bold text-base tracking-tight gradient-text">Goat Server</h1>
-                        <span class="text-[10px] text-slate-400 font-medium tracking-wide">Enterprise v2.8</span>
+                        <span class="text-[10px] text-slate-400 font-medium">Enterprise v2.8</span>
                     </div>
                 </div>
             </div>
 
             <nav class="flex-1 px-4 py-4 space-y-1.5 overflow-y-auto no-scrollbar">
-                <a href="#dashboard" onclick="switchTab('dashboard')" class="nav-link flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium text-white bg-gradient-to-r from-primary to-secondary shadow-glow transition-all group">
+                <a href="#dashboard" onclick="switchTab('dashboard')" class="nav-link flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium text-white bg-gradient-to-r from-primary to-secondary shadow-glow">
                     <i data-lucide="layout-dashboard" class="w-4 h-4 ml-3"></i> داشبورد
                 </a>
-                <a href="#users" onclick="switchTab('users')" class="nav-link flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all group">
-                    <i data-lucide="users" class="w-4 h-4 ml-3 text-slate-400 group-hover:text-primary transition-colors"></i> اشتراک‌های من
+                <a href="#users" onclick="switchTab('users')" class="nav-link flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i data-lucide="users" class="w-4 h-4 ml-3"></i> اشتراک‌های من
                 </a>
-                <a href="#create-user" onclick="switchTab('create-user')" class="nav-link flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all group">
-                    <i data-lucide="user-plus" class="w-4 h-4 ml-3 text-slate-400 group-hover:text-primary transition-colors"></i> ساخت اشتراک
+                <a href="#create-user" onclick="switchTab('create-user')" class="nav-link flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i data-lucide="user-plus" class="w-4 h-4 ml-3"></i> ساخت اشتراک
                 </a>
-                <a href="#manage-admins" onclick="switchTab('manage-admins')" class="nav-link flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all group">
-                    <i data-lucide="user-cog" class="w-4 h-4 ml-3 text-slate-400 group-hover:text-primary transition-colors"></i> مدیریت ادمین‌ها و سهمیه
+                <!-- Only for Goathszz -->
+                <a id="admin-menu-link" href="#manage-admins" onclick="switchTab('manage-admins')" class="nav-link hidden flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50">
+                    <i data-lucide="user-cog" class="w-4 h-4 ml-3"></i> مدیریت کل ادمین‌ها
                 </a>
             </nav>
 
-            <div class="p-4 border-t border-slate-200/50 dark:border-slate-800/50">
+            <div class="p-4 border-t border-slate-800">
                 <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900/40 border border-slate-800">
                     <div class="flex items-center space-x-3 space-x-reverse">
                         <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-white font-bold text-xs">GS</div>
@@ -143,22 +137,19 @@
                             <p class="text-[10px] text-emerald-400 flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block ml-1 animate-pulse"></span> آنلاین</p>
                         </div>
                     </div>
-                    <button onclick="handleLogout()" class="text-slate-400 hover:text-danger transition-colors p-1" title="خروج">
+                    <button onclick="handleLogout()" class="text-slate-400 hover:text-danger p-1">
                         <i data-lucide="log-out" class="w-4 h-4"></i>
                     </button>
                 </div>
             </div>
         </aside>
 
-        <!-- MAIN CONTENT AREA -->
+        <!-- MAIN CONTENT -->
         <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
-            <header class="h-16 glass-panel border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 z-20 shrink-0">
+            <header class="h-16 glass-panel border-b border-slate-800 flex items-center justify-between px-6 z-20 shrink-0">
                 <div class="text-xs font-semibold text-slate-300">سیستم مدیریت شبکه Goat Server</div>
                 <div class="flex items-center space-x-3 space-x-reverse">
-                    <button onclick="toggleTheme()" class="w-9 h-9 rounded-xl bg-slate-800/50 border border-slate-700/50 flex items-center justify-center text-slate-300 hover:text-white transition-all">
-                        <i id="theme-icon" data-lucide="moon" class="w-4 h-4"></i>
-                    </button>
-                    <button onclick="switchTab('create-user')" class="hidden sm:flex items-center space-x-2 space-x-reverse bg-gradient-to-r from-primary to-secondary text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-glow hover:opacity-95 transition-all">
+                    <button onclick="switchTab('create-user')" class="hidden sm:flex items-center space-x-2 space-x-reverse bg-gradient-to-r from-primary to-secondary text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-glow">
                         <i data-lucide="plus" class="w-4 h-4"></i>
                         <span>ساخت اشتراک جدید</span>
                     </button>
@@ -175,9 +166,9 @@
                     <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary/20 via-secondary/10 to-purple-600/20 border border-primary/30 p-6 sm:p-8 shadow-glass">
                         <div class="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                             <div>
-                                <span class="px-3 py-1 rounded-full bg-primary/20 border border-primary/40 text-primary text-[11px] font-bold tracking-wide">Goat Server Enterprise Control Panel</span>
-                                <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-white mt-2">خوش آمدید، ادمین عزیز 👋</h2>
-                                <p class="text-slate-400 text-xs sm:text-sm mt-1">مشاهده و مدیریت اختصاصی اشتراک‌های ایجاد شده توسط شما.</p>
+                                <span class="px-3 py-1 rounded-full bg-primary/20 border border-primary/40 text-primary text-[11px] font-bold">Goat Server Enterprise Control Panel</span>
+                                <h2 class="text-2xl sm:text-3xl font-bold text-white mt-2">خوش آمدید، <span id="welcome-name">Goathszz</span> عزیز 👋</h2>
+                                <p class="text-slate-400 text-xs sm:text-sm mt-1">مشاهده و مدیریت اشتراک‌های ایجاد شده توسط شما.</p>
                             </div>
                             <button onclick="switchTab('create-user')" class="px-5 py-2.5 rounded-xl bg-white text-slate-900 text-xs font-bold hover:bg-slate-100 transition-all shadow-soft flex items-center space-x-2 space-x-reverse">
                                 <i data-lucide="user-plus" class="w-4 h-4 text-primary"></i>
@@ -189,8 +180,8 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                         <div class="glass-panel p-5 rounded-2xl border border-slate-800 flex justify-between items-start">
                             <div>
-                                <p class="text-slate-400 text-xs font-medium">کل اشتراک‌های ساخته توسط شما</p>
-                                <h3 id="stat-total-users" class="text-2xl font-bold text-white mt-2">۳</h3>
+                                <p class="text-slate-400 text-xs font-medium">کل اشتراک‌های ساخته شما</p>
+                                <h3 id="stat-total-users" class="text-2xl font-bold text-white mt-2">۰</h3>
                             </div>
                             <div class="w-10 h-10 rounded-xl bg-primary/10 border border-primary/30 flex items-center justify-center text-primary">
                                 <i data-lucide="users" class="w-5 h-5"></i>
@@ -199,7 +190,7 @@
                         <div class="glass-panel p-5 rounded-2xl border border-slate-800 flex justify-between items-start">
                             <div>
                                 <p class="text-slate-400 text-xs font-medium">اشتراک‌های فعال شما</p>
-                                <h3 id="stat-active-users" class="text-2xl font-bold text-white mt-2">۲</h3>
+                                <h3 id="stat-active-users" class="text-2xl font-bold text-white mt-2">۰</h3>
                             </div>
                             <div class="w-10 h-10 rounded-xl bg-success/10 border border-success/30 flex items-center justify-center text-success">
                                 <i data-lucide="activity" class="w-5 h-5"></i>
@@ -213,9 +204,9 @@
                     <div class="flex justify-between items-center">
                         <div>
                             <h2 class="text-xl font-bold text-white">اشتراک‌های من</h2>
-                            <p class="text-xs text-slate-400 mt-0.5">لیست اکانت‌هایی که توسط حساب شما ایجاد شده است</p>
+                            <p class="text-xs text-slate-400 mt-0.5">لیست سرورها و اکانت‌های ساخته شده توسط شما</p>
                         </div>
-                        <button onclick="switchTab('create-user')" class="px-4 py-2 rounded-xl bg-primary text-xs font-semibold text-white shadow-glow">ساخت اشتراک جدید</button>
+                        <button onclick="switchTab('create-user')" class="px-4 py-2 rounded-xl bg-primary text-xs font-semibold text-white shadow-glow">ساخت اشتراک</button>
                     </div>
                     <div id="users-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
                 </div>
@@ -232,7 +223,7 @@
                             <label class="text-xs font-semibold text-slate-300">نام کاربری اختصاصی:</label>
                             <div class="flex space-x-2 space-x-reverse">
                                 <input type="text" id="auto-username" value="Goat_849201" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-200 font-mono">
-                                <button onclick="generateNewRandomUsername()" class="px-4 py-2.5 rounded-xl bg-slate-800 text-xs font-semibold text-white shrink-0">تولید تصادفی</button>
+                                <button onclick="generateNewRandomUsername()" class="px-4 py-2.5 rounded-xl bg-slate-800 text-xs font-semibold text-white shrink-0">تصادفی</button>
                             </div>
                         </div>
 
@@ -253,40 +244,19 @@
                     </div>
                 </div>
 
-                <!-- TAB 4: MANAGE ADMINS & LIMITS -->
+                <!-- TAB 4: MANAGE ADMINS (Only for Goathszz) -->
                 <div id="tab-manage-admins" class="space-y-6 tab-content hidden max-w-2xl mx-auto">
                     <div>
-                        <h2 class="text-xl font-bold text-white">مدیریت ادمین‌ها و تعیین سهمیه</h2>
-                        <p class="text-xs text-slate-400 mt-0.5">افزودن ادمین جدید و تعیین سقف حجم و روز برای آن‌ها</p>
+                        <h2 class="text-xl font-bold text-white">مدیریت کل ادمین‌ها</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">پنل اختصاصی مدیریت کل سیستم</p>
                     </div>
-
                     <div class="glass-panel p-6 rounded-3xl border border-slate-800 space-y-4">
-                        <h3 class="font-bold text-sm text-primary">افزودن ادمین جدید</h3>
-                        <div class="space-y-2">
-                            <label class="text-xs font-semibold text-slate-300">نام کاربری ادمین جدید:</label>
-                            <input type="text" id="new-admin-user" placeholder="مثلا: admin2" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-200">
-                        </div>
-                        <div class="space-y-2">
-                            <label class="text-xs font-semibold text-slate-300">رمز عبور:</label>
-                            <input type="password" id="new-admin-pass" placeholder="رمز عبور" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-200">
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="space-y-2">
-                                <label class="text-xs font-semibold text-slate-300">حداکثر سقف حجم (GB):</label>
-                                <input type="number" id="new-admin-max-gb" value="500" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-200">
-                            </div>
-                            <div class="space-y-2">
-                                <label class="text-xs font-semibold text-slate-300">حداکثر سقف روز:</label>
-                                <input type="number" id="new-admin-max-days" value="90" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-200">
-                            </div>
-                        </div>
-                        <button onclick="addNewAdmin()" class="w-full py-3 rounded-xl bg-primary text-white text-xs font-semibold shadow-glow">ثبت و ایجاد ادمین جدید</button>
-                    </div>
-
-                    <div class="glass-panel p-6 rounded-3xl border border-slate-800 space-y-4">
-                        <h3 class="font-bold text-sm text-white">لیست ادمین‌های سیستم Goat Server</h3>
+                        <h3 class="font-bold text-sm text-white">لیست ادمین‌های مجاز در سیستم</h3>
                         <div id="admins-list-container" class="space-y-2">
-                            <!-- Filled dynamically -->
+                            <div class="flex justify-between items-center p-3 rounded-xl bg-slate-900/50 border border-slate-800 text-xs">
+                                <span class="font-bold text-white">Goathszz (مدیر کل اصلی)</span>
+                                <span class="text-emerald-400 font-semibold">دسترسی کامل</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -308,9 +278,9 @@
                         <i data-lucide="plus" class="w-6 h-6"></i>
                     </div>
                 </button>
-                <button onclick="switchTab('manage-admins')" class="flex flex-col items-center text-slate-400 hover:text-white">
+                <button id="mobile-admin-btn" onclick="switchTab('manage-admins')" class="hidden flex flex-col items-center text-slate-400 hover:text-white">
                     <i data-lucide="user-cog" class="w-5 h-5"></i>
-                    <span class="text-[10px] mt-1 font-semibold">ادمین‌ها</span>
+                    <span class="text-[10px] mt-1 font-semibold">مدیریت</span>
                 </button>
             </div>
         </div>
@@ -330,43 +300,43 @@
 
     <div id="toast-container" class="fixed top-5 left-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
 
-    <!-- SCRIPT -->
     <script>
-        // Admins database
-        let adminsDB = [
-            { username: 'Goathszz', pass: '1234', maxGb: 1000, maxDays: 365 }
-        ];
-
-        let currentAdmin = 'Goathszz';
-
-        // Users database associated with admins
+        let currentAdmin = '';
         let myUsers = [
-            { id: 1, creator: 'Goathszz', name: 'Nika_1785', gb: 5, used: 0.12, daysLeft: 6, status: 'فعال', subLink: 'vless://goat-key-1@server:443?encryption=none#Nika' },
-            { id: 2, creator: 'Goathszz', name: 'Amir_9247', gb: 30, used: 2.4, daysLeft: 22, status: 'فعال', subLink: 'trojan://goat-key-2@server:443#Amir' },
-            { id: 3, creator: 'Goathszz', name: 'Sara_4091', gb: 5, used: 5.0, daysLeft: 0, status: 'منقضی شده', subLink: 'vmess://goat-key-3@server:443#Sara' }
+            { id: 1, creator: 'Goathszz', name: 'Nika_1785', gb: 5, used: 0.12, daysLeft: 6, status: 'فعال', subLink: 'vless://goat-key-1@server:443?encryption=none#Nika' }
         ];
 
         function handleLogin() {
             const user = document.getElementById('login-username').value.trim();
-            const pass = document.getElementById('login-password').value.trim();
-
-            const found = adminsDB.find(a => a.username === user && a.pass === pass);
-            if (found || (user === 'Goathszz' && pass === '')) {
-                currentAdmin = user || 'Goathszz';
-                document.getElementById('login-screen').classList.add('hidden');
-                document.getElementById('main-app').classList.remove('hidden');
-                document.getElementById('current-admin-display').innerText = currentAdmin;
-                renderUsers();
-                renderAdminsList();
-                showToast(`خوش آمدید، ${currentAdmin}`, 'success');
-            } else {
-                showToast('نام کاربری یا رمز عبور اشتباه است (پیشفرض: Goathszz)', 'danger');
+            if (!user) {
+                showToast('لطفا نام کاربری خود را وارد کنید', 'danger');
+                return;
             }
+
+            currentAdmin = user;
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('main-app').classList.remove('hidden');
+            document.getElementById('current-admin-display').innerText = currentAdmin;
+            document.getElementById('welcome-name').innerText = currentAdmin;
+
+            // Check if user is main manager Goathszz
+            if (currentAdmin.toLowerCase() === 'goathszz') {
+                document.getElementById('admin-menu-link').classList.remove('hidden');
+                document.getElementById('mobile-admin-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('admin-menu-link').classList.add('hidden');
+                document.getElementById('mobile-admin-btn').classList.add('hidden');
+            }
+
+            renderUsers();
+            showToast(`خوش آمدید، ${currentAdmin}`, 'success');
         }
 
         function handleLogout() {
             document.getElementById('main-app').classList.add('hidden');
             document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('login-username').value = '';
+            document.getElementById('login-password').value = '';
             showToast('با موفقیت خارج شدید', 'warning');
         }
 
@@ -375,7 +345,6 @@
             if(!container) return;
             container.innerHTML = '';
             
-            // Filter users created by current logged in admin
             const filtered = myUsers.filter(u => u.creator === currentAdmin);
 
             filtered.forEach(u => {
@@ -390,7 +359,7 @@
                             <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-white font-bold text-sm">${u.name.charAt(0)}</div>
                             <div>
                                 <h4 class="font-bold text-sm text-white">${u.name}</h4>
-                                <p class="text-[11px] text-slate-400">ساخته شده توسط ${u.creator}</p>
+                                <p class="text-[11px] text-slate-400">ساخته شده توسط شما</p>
                             </div>
                         </div>
                         ${statusBadge}
@@ -429,42 +398,6 @@
         function updateStats(total, active) {
             document.getElementById('stat-total-users').innerText = total;
             document.getElementById('stat-active-users').innerText = active;
-        }
-
-        function renderAdminsList() {
-            const container = document.getElementById('admins-list-container');
-            if(!container) return;
-            container.innerHTML = '';
-            adminsDB.forEach(adm => {
-                let row = document.createElement('div');
-                row.className = "flex justify-between items-center p-3 rounded-xl bg-slate-900/50 border border-slate-800 text-xs";
-                row.innerHTML = `
-                    <div>
-                        <span class="font-bold text-white">${adm.username}</span>
-                        <span class="text-slate-400 mr-2">(سقف حجم: ${adm.maxGb}G | سقف روز: ${adm.maxDays})</span>
-                    </div>
-                    <span class="text-emerald-400 font-semibold">فعال</span>
-                `;
-                container.appendChild(row);
-            });
-        }
-
-        function addNewAdmin() {
-            const user = document.getElementById('new-admin-user').value.trim();
-            const pass = document.getElementById('new-admin-pass').value.trim();
-            const maxGb = parseInt(document.getElementById('new-admin-max-gb').value) || 100;
-            const maxDays = parseInt(document.getElementById('new-admin-max-days').value) || 30;
-
-            if(!user || !pass) {
-                showToast('لطفا نام کاربری و رمز عبور را وارد کنید', 'danger');
-                return;
-            }
-
-            adminsDB.push({ username: user, pass: pass, maxGb: maxGb, maxDays: maxDays });
-            renderAdminsList();
-            showToast(`ادمین ${user} با موفقیت افزوده شد`, 'success');
-            document.getElementById('new-admin-user').value = '';
-            document.getElementById('new-admin-pass').value = '';
         }
 
         function switchTab(tabId) {
@@ -534,15 +467,6 @@
             myUsers = myUsers.filter(u => u.id !== id);
             renderUsers();
             showToast('اشتراک حذف شد', 'warning');
-        }
-
-        let isDarkMode = true;
-        function toggleTheme() {
-            isDarkMode = !isDarkMode;
-            document.documentElement.classList.toggle('dark', isDarkMode);
-            document.documentElement.classList.toggle('light', !isDarkMode);
-            document.getElementById('theme-icon').setAttribute('data-lucide', isDarkMode ? 'moon' : 'sun');
-            lucide.createIcons();
         }
 
         window.onload = function() {
