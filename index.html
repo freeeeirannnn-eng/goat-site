@@ -30,11 +30,11 @@
 
         .container {
             background: var(--card-bg);
-            padding: 30px;
+            padding: 25px;
             border-radius: 16px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
             width: 100%;
-            max-width: 480px;
+            max-width: 500px;
             box-sizing: border-box;
             border: 1px solid var(--border);
         }
@@ -44,12 +44,12 @@
             color: var(--primary);
             margin-bottom: 20px;
             font-weight: 700;
-            font-size: 22px;
+            font-size: 20px;
         }
 
         label {
             display: block;
-            margin-top: 15px;
+            margin-top: 12px;
             color: var(--text-main);
             font-size: 13px;
             font-weight: 600;
@@ -57,22 +57,14 @@
 
         input, select {
             width: 100%;
-            padding: 12px;
-            margin-top: 6px;
+            padding: 10px;
+            margin-top: 5px;
             border: 1px solid var(--border);
             border-radius: 10px;
             box-sizing: border-box;
             font-family: 'Vazirmatn';
             font-size: 14px;
             background: #f8fafc;
-            transition: all 0.2s;
-        }
-
-        input:focus, select:focus {
-            border-color: var(--primary);
-            outline: none;
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         button {
@@ -80,8 +72,8 @@
             background: var(--primary);
             color: white;
             border: none;
-            padding: 13px;
-            margin-top: 20px;
+            padding: 12px;
+            margin-top: 15px;
             border-radius: 10px;
             font-size: 15px;
             font-family: 'Vazirmatn';
@@ -92,41 +84,54 @@
 
         button:hover { background: var(--primary-hover); }
 
-        .btn-danger { background: #ef4444; margin-top: 10px; }
+        .btn-danger { background: #ef4444; }
         .btn-danger:hover { background: #dc2626; }
-        .btn-warning { background: #f59e0b; color: #fff; margin-top: 10px; }
+        .btn-warning { background: #f59e0b; color: #fff; }
         .btn-warning:hover { background: #d97706; }
-        .btn-secondary { background: #64748b; margin-top: 10px; }
-        .btn-secondary:hover { background: #475569; }
+        .btn-success { background: #16a34a; }
+        .btn-success:hover { background: #15803d; }
 
-        #result { margin-top: 15px; text-align: center; font-weight: 600; font-size: 13px; }
         .hidden { display: none !important; }
 
-        .success-box {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
-            word-break: break-all;
-            text-align: center;
-        }
-
-        .admin-card {
+        /* استایل لیست اشتراک‌ها به سبک پنل‌های مدرن */
+        .sub-item {
             background: #f8fafc;
             border: 1px solid var(--border);
-            padding: 14px;
-            border-radius: 10px;
+            border-radius: 12px;
             margin-top: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sub-header {
+            padding: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            cursor: pointer;
         }
+
+        .sub-header:hover {
+            background: #f1f5f9;
+        }
+
+        .sub-content {
+            padding: 15px;
+            background: #ffffff;
+            border-top: 1px solid var(--border);
+            display: none;
+            text-align: center;
+            word-break: break-all;
+        }
+
+        .sub-content.open {
+            display: block;
+        }
+
         .badge {
-            display: inline-block;
-            padding: 2px 8px;
             background: #e0f2fe;
             color: #0369a1;
+            padding: 2px 8px;
             border-radius: 6px;
             font-size: 11px;
             font-weight: 600;
@@ -151,11 +156,26 @@
         <div id="loginError" style="color: #ef4444; text-align: center; margin-top: 12px; font-size: 13px; font-weight: 600;"></div>
     </div>
 
-    <!-- پنل اصلی مدیریت -->
+    <!-- پنل اصلی ادمین / کاربر -->
     <div id="adminPanel" class="hidden">
-        <h2>ساخت اشتراک جدید</h2>
-        
-        <form id="subForm" onsubmit="createSub(event)">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 id="welcomeTitle" style="margin: 0; font-size: 16px; color: var(--primary);">داشبورد</h3>
+            <button onclick="logout()" class="btn-danger" style="width: auto; margin: 0; padding: 6px 12px; font-size: 12px;">خروج</button>
+        </div>
+
+        <!-- دکمه ایجاد اشتراک جدید (بالای صفحه) -->
+        <button onclick="openCreateModal()" class="btn-success">➕ ایجاد اشتراک جدید</button>
+
+        <h4 style="margin: 20px 0 10px 0; font-size: 14px; color: var(--text-main);">لیست اشتراک‌های ساخته شده</h4>
+        <div id="mySubsList" style="max-height: 350px; overflow-y: auto;">
+            <p style="text-align: center; color: var(--text-muted); font-size: 13px;">در حال بارگذاری...</p>
+        </div>
+    </div>
+
+    <!-- فرم ساخت اشتراک (به صورت بخش کشویی) -->
+    <div id="createModal" class="hidden" style="background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px solid var(--border); margin-top: 15px;">
+        <h4 style="margin: 0 0 10px 0; color: var(--primary);">ساخت اشتراک جدید</h4>
+        <form onsubmit="createSub(event)">
             <label>حجم (گیگابایت):</label>
             <input type="number" id="volume" required placeholder="مثال: 30">
 
@@ -168,33 +188,10 @@
                 <option value="normal">عادی (یو پنل - Normal)</option>
             </select>
 
-            <button type="submit">ایجاد اشتراک</button>
+            <button type="submit" class="btn-success">ثبت و ساخت نهایی</button>
+            <button type="button" onclick="closeCreateModal()" class="btn-danger" style="margin-top: 8px;">انصراف</button>
         </form>
-        <div id="result"></div>
-        <div id="subResultBox" class="hidden success-box"></div>
-
-        <div style="margin-top: 25px; border-top: 1px solid var(--border); padding-top: 15px;">
-            <button type="button" onclick="openAdminManager()" class="btn-warning">⚙️ مدیریت ادمین‌ها و گزارشات</button>
-            <button type="button" onclick="logout()" class="btn-danger">خروج از حساب</button>
-        </div>
-    </div>
-
-    <!-- بخش مدیریت ادمین‌ها -->
-    <div id="subAdminManager" class="hidden">
-        <h2>مدیریت ادمین‌ها و تسویه</h2>
-        <div style="background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 15px;">
-            <h4 style="margin: 0 0 10px 0; color: var(--primary); font-size: 13px;">➕ افزودن ادمین جدید</h4>
-            <input type="text" id="newAdminUser" placeholder="آیدی ادمین" style="margin-bottom: 8px;">
-            <input type="password" id="newAdminPass" placeholder="رمز عبور" style="margin-bottom: 8px;">
-            <input type="number" id="newAdminVolume" placeholder="سهمیه حجم (GB)" style="margin-bottom: 8px;">
-            <input type="number" id="newAdminDays" placeholder="سهمیه روز" style="margin-bottom: 8px;">
-            <button type="button" onclick="addAdmin()" style="margin-top: 0; background: var(--primary);">ثبت ادمین</button>
-        </div>
-
-        <h3 style="font-size: 14px;">لیست ادمین‌ها</h3>
-        <div id="adminsListContainer" style="max-height: 200px; overflow-y: auto;"></div>
-
-        <button type="button" onclick="closeAdminManager()" class="btn-secondary">بازگشت</button>
+        <div id="createResult" style="text-align: center; margin-top: 10px; font-size: 13px; font-weight: 600;"></div>
     </div>
 </div>
 
@@ -208,10 +205,8 @@
 
         if (user === 'Goathszz' && pass === 'Goathszz') {
             currentAdmin = 'Goathszz';
-            document.getElementById('loginSection').classList.add('hidden');
-            document.getElementById('adminPanel').classList.remove('hidden');
+            initDashboard();
         } else {
-            // بررسی ادمین‌های فرعی از سرور
             verifySubAdmin(user, pass);
         }
     }
@@ -226,8 +221,7 @@
             const data = await res.json();
             if(data.success) {
                 currentAdmin = username;
-                document.getElementById('loginSection').classList.add('hidden');
-                document.getElementById('adminPanel').classList.remove('hidden');
+                initDashboard();
             } else {
                 document.getElementById('loginError').innerText = '❌ اطلاعات ورود اشتباه است!';
             }
@@ -236,126 +230,93 @@
         }
     }
 
+    function initDashboard() {
+        document.getElementById('loginSection').classList.add('hidden');
+        document.getElementById('adminPanel').classList.remove('hidden');
+        document.getElementById('welcomeTitle').innerText = `مدیر: ${currentAdmin}`;
+        loadMySubs();
+    }
+
     function logout() { location.reload(); }
+
+    function openCreateModal() {
+        document.getElementById('createModal').classList.remove('hidden');
+    }
+
+    function closeCreateModal() {
+        document.getElementById('createModal').classList.add('hidden');
+    }
+
+    async function loadMySubs() {
+        const container = document.getElementById('mySubsList');
+        try {
+            const res = await fetch(`/api/admin-reports?username=${currentAdmin}`);
+            const data = await res.json();
+            container.innerHTML = '';
+
+            if(data.reports && data.reports.length > 0) {
+                data.reports.forEach((sub, index) => {
+                    container.innerHTML += `
+                        <div class="sub-item">
+                            <div class="sub-header" onclick="toggleSub(${index})">
+                                <div>
+                                    <strong>${sub.username}</strong><br>
+                                    <span class="badge">حجم: ${sub.volume}GB | روز: ${sub.days}</span>
+                                </div>
+                                <span style="font-size: 12px; color: var(--text-muted);">${sub.date} 🔽</span>
+                            </div>
+                            <div class="sub-content" id="sub-content-${index}">
+                                <p style="margin: 0 0 10px 0; font-size: 12px; color: var(--text-muted);">لینک اشتراک:</p>
+                                <input type="text" value="${sub.subLink}" readonly style="font-size: 11px; text-align: center; margin-bottom: 10px;" onclick="this.select()">
+                                <p style="margin: 0 0 5px 0; font-size: 12px; color: var(--text-muted);">QR Code:</p>
+                                <img src="https://api.qrserver.com/v1/create-qr-code/?size=130x130&data=${encodeURIComponent(sub.subLink)}" alt="QR" style="border-radius: 8px;">
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                container.innerHTML = '<p style="text-align: center; color: var(--text-muted); font-size: 13px;">هنوز اشتراکی نساخته‌اید.</p>';
+            }
+        } catch(e) {
+            container.innerHTML = '<p style="text-align: center; color: red; font-size: 13px;">خطا در دریافت لیست</p>';
+        }
+    }
+
+    function toggleSub(index) {
+        const content = document.getElementById(`sub-content-${index}`);
+        content.classList.toggle('open');
+    }
 
     async function createSub(e) {
         e.preventDefault();
         const volume = document.getElementById('volume').value;
         const days = document.getElementById('days').value;
         const panelType = document.getElementById('panelType').value;
-        const resultDiv = document.getElementById('result');
-        const subBox = document.getElementById('subResultBox');
+        const resDiv = document.getElementById('createResult');
 
-        resultDiv.style.color = varColor('--primary');
-        resultDiv.innerText = '⏳ در حال ساخت اشتراک...';
-        subBox.classList.add('hidden');
+        resDiv.style.color = 'var(--primary)';
+        resDiv.innerText = '⏳ در حال ساخت...';
 
         try {
-            const response = await fetch('/api/create-subscription', {
+            const res = await fetch('/api/create-subscription', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ volume, days, panelType, adminName: currentAdmin })
             });
-
-            const data = await response.json();
-            if (data.success) {
-                resultDiv.style.color = '#16a34a';
-                resultDiv.innerText = '✅ اشتراک با موفقیت ساخته شد!';
-                subBox.innerHTML = `
-                    <strong>نام کاربری:</strong> ${data.username}<br><br>
-                    <a href="${data.subLink}" target="_blank" style="color:var(--primary); font-weight:bold;">🔗 لینک اشتراک (Sub Link)</a><br><br>
-                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(data.subLink)}" alt="QR Code" style="border-radius:8px;">
-                `;
-                subBox.classList.remove('hidden');
-            } else {
-                resultDiv.style.color = '#dc2626';
-                resultDiv.innerText = data.error || 'خطا در ساخت اشتراک';
-            }
-        } catch (err) {
-            resultDiv.style.color = '#dc2626';
-            resultDiv.innerText = '❌ خطا در ارتباط با سرور مقصد';
-        }
-    }
-
-    function varColor(name) { return '#2563eb'; }
-
-    function openAdminManager() {
-        if(currentAdmin !== 'Goathszz') {
-            alert('فقط مدیر کل به این بخش دسترسی دارد!');
-            return;
-        }
-        document.getElementById('adminPanel').classList.add('hidden');
-        document.getElementById('subAdminManager').classList.remove('hidden');
-        loadAdmins();
-    }
-
-    function closeAdminManager() {
-        document.getElementById('subAdminManager').classList.add('hidden');
-        document.getElementById('adminPanel').classList.remove('hidden');
-    }
-
-    async function loadAdmins() {
-        const container = document.getElementById('adminsListContainer');
-        container.innerHTML = '<p style="text-align:center; color:#64748b; font-size:12px;">در حال بارگذاری...</p>';
-        try {
-            const res = await fetch('/api/admins');
             const data = await res.json();
-            container.innerHTML = '';
-            if(data.admins && data.admins.length > 0) {
-                data.admins.forEach(adm => {
-                    container.innerHTML += `
-                        <div class="admin-card">
-                            <div>
-                                <strong>${adm.username}</strong><br>
-                                <span class="badge">حجم: ${adm.volume}GB | روز: ${adm.days}</span>
-                            </div>
-                            <div>
-                                <button onclick="settleAdmin('${adm.username}')" style="padding:4px 8px; font-size:11px; background:#16a34a; width:auto; margin:0;">تسویه</button>
-                                <button onclick="deleteAdmin('${adm.username}')" style="padding:4px 8px; font-size:11px; background:#ef4444; width:auto; margin:2px 0 0 0;">حذف</button>
-                            </div>
-                        </div>
-                    `;
-                });
+            if(data.success) {
+                resDiv.style.color = '#16a34a';
+                resDiv.innerText = '✅ با موفقیت ساخته شد!';
+                closeCreateModal();
+                loadMySubs();
             } else {
-                container.innerHTML = '<p style="text-align:center; color:#64748b; font-size:12px;">هیچ ادمینی نیست.</p>';
+                resDiv.style.color = '#ef4444';
+                resDiv.innerText = data.error || 'خطا';
             }
-        } catch(e) {}
-    }
-
-    async function addAdmin() {
-        const username = document.getElementById('newAdminUser').value;
-        const password = document.getElementById('newAdminPass').value;
-        const volume = document.getElementById('newAdminVolume').value;
-        const days = document.getElementById('newAdminDays').value;
-        if(!username || !password) return alert('اطلاعات کامل وارد کنید');
-        const res = await fetch('/api/admins/add', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username, password, volume, days })
-        });
-        const data = await res.json();
-        alert(data.message || 'انجام شد');
-        loadAdmins();
-    }
-
-    async function deleteAdmin(username) {
-        if(!confirm('حذف شود؟')) return;
-        await fetch('/api/admins/delete', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username })
-        });
-        loadAdmins();
-    }
-
-    async function settleAdmin(username) {
-        if(!confirm('تسویه حساب و پاکسازی گزارشات؟')) return;
-        await fetch('/api/admins/settle', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ username })
-        });
-        loadAdmins();
+        } catch(err) {
+            resDiv.style.color = '#ef4444';
+            resDiv.innerText = 'خطا در ارتباط';
+        }
     }
 </script>
 
