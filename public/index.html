@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل مدیریت کانفیگ</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Login View -->
+        <div id="login-view" class="login-container">
+            <div class="card">
+                <h2>ورود به پنل</h2>
+                <form id="login-form" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>نام کاربری</label>
+                        <input type="text" id="username" required autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label>رمز عبور</label>
+                        <input type="password" id="password" required autocomplete="current-password">
+                    </div>
+                    <button type="submit">ورود</button>
+                    <p id="login-error" class="error-msg"></p>
+                </form>
+            </div>
+        </div>
+
+        <!-- Dashboard View (Loaded dynamically) -->
+        <div id="dashboard-view" style="display: none;" class="dashboard-layout">
+            <aside>
+                <div class="sidebar-brand">پنل مدیریت</div>
+                <ul class="sidebar-menu" id="sidebar-menu">
+                    <!-- Menu items injected via JS -->
+                </ul>
+                <button onclick="logout()" style="background-color: var(--danger); margin-top: auto;">خروج از حساب</button>
+            </aside>
+            <main class="main-content" id="main-content">
+                <!-- Content injected via JS -->
+            </main>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = '/api';
+
+        function checkAuth() {
+            const token = localStorage.getItem('token');
+            const role = localStorage.getItem('role');
+            if (token && role) {
+                showDashboard(role);
+            } else {
+                showLogin();
+            }
+        }
+
+        function showLogin() {
+            document.getElementById('login-view').style.display = 'flex';
+            document.getElementById('dashboard-view').style.display = 'none';
+        }
+
+        function showDashboard(role) {
+            document.getElementById('login-view').style.display = 'none';
+            document.getElementById('dashboard-view').style.display = 'flex';
+            setupMenu(role);
+            loadDashboardContent(role);
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorEl = document.getElementById('login-error');
+            errorEl.textContent = '';
+
+            try {
+                const res = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('role', data.role);
+                    showDashboard(data.role);
+                } else {
+                    errorEl.textContent = data.error || 'خطا در ورود اطلاعات';
+                }
+            } catch (err) {
+                errorEl.textContent = 'خطا در ارتباط با سرور';
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            showLogin();
+        }
+
+        function setupMenu(role) {
+            const menu = document.getElementById('sidebar-menu');
+            if (role === 'owner') {
+                menu.innerHTML = `
+                    <li class="active" onclick="switchTab('owner-dash', this)">داشبورد کل</li>
+                    <li onclick="switchTab('owner-admins', this)">مدیریت ادمین‌ها</li>
+                    <li onclick="switchTab('owner-logs', this)">لاگ‌های سیستم</li>
+                `;
+            } else {
+                menu.innerHTML = `
+                    <li class="active" onclick="switchTab('admin-dash', this)">داشبورد من</li>
+                    <li onclick="switchTab('admin-configs', this)">لیست کانفیگ‌ها</li>
+                    <li onclick="switchTab('admin-new', this)">ساخت کانفیگ جدید</li>
+                `;
+            }
+        }
+
+        async function switchTab(tab, el) {
+            document.querySelectorAll('.sidebar-menu li').forEach(li => li.classList.remove('active'));
+            el.classList.add('active');
+            const content = document.getElementById('main-content');
+            const token = localStorage.getItem('token');
+            const role = localStorage.getItem('role');
+
+            if (role === 'owner') {
+                if (tab === 'owner-dash') {
+                    const res = await fetch(`${API_BASE}/owner/dashboard`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const d = await res.json();
+                    content.innerHTML = `
+                        <h2>داشبورد مدیریت کل</h2>
+                        <div class="stats-grid">
+                            <div class="stat-card"><h4>تعداد ادمین‌ها</h4><p>${d.totalAdmins}</p></div>
+                            <div class="stat-card"><h4>کل کانفیگ‌ها</h4><p>${d.totalConfigs}</p></div>
+                            <div class="stat-card"><h4>کانفیگ‌های امروز</h4><p>${d.todaysConfigs}</p></div>
+                            <div class="stat-card"><h4>ادمین‌های فعال</h4><p>${d.activeAdmins}</p></div>
+                        </div>
+                    `;
+                } else if (tab === 'owner-admins') {
+                    const res = await fetch(`${API_BASE}/owner/admins`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const admins = await res.json();
+                    let rows = admins.map(a => `
+                        <tr>
+                            <td>${a.username}</td>
+                            <td>${a.max_gb} گیگابایت</td>
+                            <td>${a.max_configs} عدد</td>
+                            <td><span class="badge ${a.status}">${a.status === 'active' ? 'فعال' : 'غیرفعال'}</span></td>
+                        </tr>
+                    `).join('');
+                    content.innerHTML = `
+                        <h2>مدیریت ادمین‌ها</h2>
+                        <table>
+                            <thead><tr><th>نام کاربری</th><th>حجم مجاز</th><th>تعداد کانفیگ</th><th>وضعیت</th></tr></thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    `;
+                } else if (tab === 'owner-logs') {
+                    const res = await fetch(`${API_BASE}/owner/logs`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const logs = await res.json();
+                    let rows = logs.map(l => `
+                        <tr>
+                            <td>${l.username || 'سیستم'}</td>
+                            <td>${l.action}</td>
+                            <td>${l.details || '-'}</td>
+                            <td>${new Date(l.timestamp).toLocaleString('fa-IR')}</td>
+                        </tr>
+                    `).join('');
+                    content.innerHTML = `
+                        <h2>لاگ‌های فعالیت سیستم</h2>
+                        <table>
+                            <thead><tr><th>کاربر</th><th>عملیات</th><th>جزئیات</th><th>زمان</th></tr></thead>
+                            <tbody>${rows}</tbody>
+                        </table>
+                    `;
+                }
+            } else {
+                if (tab === 'admin-dash') {
+                    const res = await fetch(`${API_BASE}/admin/dashboard`, { headers: { 'Authorization': `Bearer ${token}` } });
+                    const d = await res.json();
+                    content.innerHTML = `
+                        <h2>داشبورد ادمین</h2>
+                        <div class="stats-grid">
+                            <div class="stat-card"><h4>کانفیگ‌های ساخته شده</h4><p>${d.configsCreated}</p></div>
+                            <div class="stat-card"><h4>ترافیک مصرفی</h4><p>${d.trafficUsed} گیگ</p></div>
+                            <div class="stat-card"><h4>حجم باقی‌مانده</h4><p>${d.remainingGb} گیگ</p></div>
+                        </div>
+                    `;
+                } else if (tab === 'admin-configs') {
+                    const res = await fetch(`${API_BASE}/admin/configs`, { headers: { 'Authorization': `Bearer ${token}` } });
+                      const configs = await res.json();
+                      let rows = configs.map(c => `
+                          <tr>
+                              <td>${c.username}</td>
+                              <td>${c.volume} گیگ</td>
+                              <td><span class="badge ${c.status}">${c.status}</span></td>
+                              <td><a href="${c.subscription_url}" target="_blank" style="color:var(--primary)">لینک اشتراک</a></td>
+                          </tr>
+                      `).join('');
+                      content.innerHTML = `
+                          <h2>لیست کانفیگ‌های شما</h2>
+                          <table>
+                              <thead><tr><th>نام کاربری</th><th>حجم</th><th>وضعیت</th><th>لینک</th></tr></thead>
+                              <tbody>${rows}</tbody>
+                          </table>
+                      `;
+                } else if (tab === 'admin-new') {
+                    content.innerHTML = `
+                        <h2>ساخت کانفیگ جدید</h2>
+                        <div class="card" style="max-width: 600px; margin: auto;">
+                            <form onsubmit="createConfig(event)">
+                                <div class="form-group">
+                                    <label>نام کاربری کانفیگ</label>
+                                    <input type="text" id="cfg-username" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>حجم (گیگابایت)</label>
+                                    <input type="number" id="cfg-volume" value="10" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>مدت اعتبار (روز)</label>
+                                    <input type="number" id="cfg-days" value="30" required>
+                                </div>
+                                <button type="submit">ساخت کانفیگ</button>
+                                <p id="cfg-msg" class="error-msg" style="color:var(--success)"></p>
+                            </form>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        async function loadDashboardContent(role) {
+            const defaultTab = role === 'owner' ? 'owner-dash' : 'admin-dash';
+            const firstLi = document.querySelector('.sidebar-menu li');
+            if (firstLi) switchTab(defaultTab, firstLi);
+        }
+
+        async function createConfig(e) {
+            e.preventDefault();
+            const token = localStorage.getItem('token');
+            const username = document.getElementById('cfg-username').value;
+            const volume = parseFloat(document.getElementById('cfg-volume').value);
+            const days = parseInt(document.getElementById('cfg-days').value);
+            const msgEl = document.getElementById('cfg-msg');
+            msgEl.textContent = '';
+
+            try {
+                const res = await fetch(`${API_BASE}/admin/configs`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ username, volume, days })
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    msgEl.style.color = 'var(--success)';
+                    msgEl.textContent = 'کانفیگ با موفقیت ساخته شد!';
+                    document.getElementById('cfg-username').value = '';
+                } else {
+                    msgEl.style.color = 'var(--danger)';
+                    msgEl.textContent = data.error || 'خطا در ساخت کانفیگ';
+                }
+            } catch (err) {
+                msgEl.style.color = 'var(--danger)';
+                msgEl.textContent = 'خطا در ارتباط با سرور';
+            }
+        }
+
+        window.onload = checkAuth;
+    </script>
+</body>
+</html>
