@@ -1,16 +1,21 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
 
-// استفاده از پورت اختصاصی رندر یا پیش‌فرض 3000
+// سرو کردن فایل‌های استاتیک فرانت‌اند
+app.use(express.static(path.join(__dirname, 'public')));
+
+// روت صریح برای هدایت به index.html
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 const PORT = process.env.PORT || 3000;
-
-// اتصال به MongoDB (استفاده از متغیر محیطی ابری یا لوکال)
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/goodserver_panel';
 
 mongoose.connect(MONGO_URI, {
@@ -19,7 +24,6 @@ mongoose.connect(MONGO_URI, {
 }).then(() => console.log('Connected to MongoDB'))
   .catch(err => console.log('DB Connection Error:', err));
 
-// مدل دیتابیس برای ذخیره اشتراک‌ها
 const SubscriptionSchema = new mongoose.Schema({
     adminName: String,
     username: String,
@@ -31,22 +35,17 @@ const SubscriptionSchema = new mongoose.Schema({
 });
 const Subscription = mongoose.model('Subscription', SubscriptionSchema);
 
-// سیستم احراز هویت برای مدیر کل و ادمین‌های گود سرور
 app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
-
     if (username === 'Goathszz' && password === 'admin12345') {
         return res.json({ user: { username: 'Goathszz', role: 'super_admin' } });
     }
-
     if (username === 'admin' && password === '1234') {
         return res.json({ user: { username: 'گود-ادمین', role: 'sub_admin' } });
     }
-
     res.status(401).json({ message: 'نام کاربری یا رمز عبور اشتباه است' });
 });
 
-// ایجاد اشتراک جدید
 app.post('/api/subscriptions', async (req, res) => {
     try {
         const { adminName, panelType, traffic, days } = req.body;
@@ -69,7 +68,6 @@ app.post('/api/subscriptions', async (req, res) => {
     }
 });
 
-// دریافت اشتراک‌های یک ادمین خاص
 app.get('/api/subscriptions', async (req, res) => {
     const { admin } = req.query;
     const query = admin ? { adminName: admin } : {};
@@ -77,7 +75,6 @@ app.get('/api/subscriptions', async (req, res) => {
     res.json(subs);
 });
 
-// گزارش کامل کل سیستم (مخصوص مدیر کل Goathszz)
 app.get('/api/all-subscriptions', async (req, res) => {
     const allSubs = await Subscription.find().sort({ createdAt: -1 });
     res.json(allSubs);
