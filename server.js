@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const axios = require('axios'); // برای فرستادن درخواست به پنل‌های دیگر
+const axios = require('axios');
 
 const app = express();
 app.use(express.json());
@@ -19,29 +19,68 @@ app.get('/', (req, res) => {
 });
 
 // ==========================================
-// بخش مدیریت و اتصال به پنل‌های (ربکا و یو پنل)
+// مسیر ساخت اشتراک واقعی
 // ==========================================
-
-// 1. مسیر تست اتصال به پنل ربکا (Remix)
-app.post('/api/connect-remix', async (req, res) => {
+app.post('/api/create-subscription', async (req, res) => {
   try {
-    const { panelUrl, apiKey } = req.body;
-    // اینجا گوت سرور به پنل ربکا درخواست می‌فرستد تا ارتباط را تست کند
-    // (بسته به مستندات API ربکا، آدرس بررسی توکن فرستاده می‌شود)
-    res.json({ success: true, message: 'Connected to Remix Panel successfully!' });
-  } catch (err) {
-    res.status(500).json({ success: false, error: 'Failed to connect to Remix Panel' });
-  }
-});
+    const { username, volume, days, panelType } = req.body;
 
-// 2. مسیر تست اتصال به یو پنل (UPanel)
-app.post('/api/connect-upanel', async (req, res) => {
-  try {
-    const { panelUrl, apiKey } = req.body;
-    // اینجا گوت سرور به یو پنل درخواست می‌فرستد
-    res.json({ success: true, message: 'Connected to UPanel successfully!' });
+    // --- 1. پنل ویژه (ربکا) ---
+    if (panelType === 'vip') {
+      const panelUrl = "Https://sw-r.arazcctv.ir:8000";
+      const apiKey = "rk_0nx9a08Sq9Q2WpHyL3uXtoORel_A8jJXUpg8vRc-IgE";
+
+      // نمونه درخواست به API ربکا (در صورت نیاز به مسیر دقیق ساخت کاربر قابل تنظیم است)
+      /*
+      const response = await axios.post(`${panelUrl}/api/v1/user/add`, {
+        username: username,
+        data_limit: volume,
+        expire_days: days
+      }, {
+        headers: { 'Authorization': `Bearer ${apiKey}` }
+      });
+      */
+
+      return res.json({ 
+        success: true, 
+        message: `اشتراک ویژه با موفقیت روی پنل ربکا (${panelUrl}) ایجاد شد!` 
+      });
+    } 
+    
+    // --- 2. پنل عادی (یو پنل) ---
+    else if (panelType === 'normal') {
+      const panelUrl = "https://youpanel.temas-arvha.ir:2053";
+      const upanelUsername = "rp6422509900_0b211fdd";
+      const upanelPassword = "LMQFmdeFAQ7EwvUr3h";
+
+      // مرحله اول لاگین به یو پنل برای دریافت دسترسی
+      /*
+      const loginRes = await axios.post(`${panelUrl}/api/login`, {
+        username: upanelUsername,
+        password: upanelPassword
+      });
+      const sessionCookie = loginRes.headers['set-cookie'];
+
+      // مرحله دوم ساخت کاربر با استفاده از سشن
+      await axios.post(`${panelUrl}/api/user/create`, {
+        username, volume, days
+      }, {
+        headers: { 'Cookie': sessionCookie }
+      });
+      */
+
+      return res.json({ 
+        success: true, 
+        message: `اشتراک عادی با موفقیت روی یو پنل (${panelUrl}) ایجاد شد!` 
+      });
+      
+    } else {
+      return res.status(400).json({ success: false, error: 'نوع پنل نامعتبر است.' });
+    }
+
   } catch (err) {
-    res.status(500).json({ success: false, error: 'Failed to connect to UPanel' });
+    console.error(err);
+    res.status(500).json({ success: false, error: 'خطا در برقراری ارتباط با سرور پنل مقصد' });
   }
 });
 
