@@ -2,10 +2,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const axios = require('axios');
+const path = require('path');
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+
+// خواندن فایل‌های استاتیک (مثل index.html برای پنل وب)
+app.use(express.static(__dirname));
 
 // لینک اتصال دیتابیس شما
 const MONGO_URI = "mongodb+srv://amir012345zarif_db_user:amir1020@cluster0.7cuxkix.mongodb.net/?appName=Cluster0";
@@ -14,8 +18,9 @@ mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ Connected to MongoDB Atlas successfully!'))
   .catch((err) => console.error('❌ MongoDB connection error:', err));
 
+// مسیر پیش‌فرض برای بارگذاری صفحه پنل وب
 app.get('/', (req, res) => {
-  res.send('Goat Server Master Panel is running!');
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // ==========================================
@@ -30,7 +35,7 @@ app.post('/api/create-subscription', async (req, res) => {
       const panelUrl = "Https://sw-r.arazcctv.ir:8000";
       const apiKey = "rk_0nx9a08Sq9Q2WpHyL3uXtoORel_A8jJXUpg8vRc-IgE";
 
-      // نمونه درخواست به API ربکا (در صورت نیاز به مسیر دقیق ساخت کاربر قابل تنظیم است)
+      // نمونه درخواست به API ربکا
       /*
       const response = await axios.post(`${panelUrl}/api/v1/user/add`, {
         username: username,
