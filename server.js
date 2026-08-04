@@ -28,7 +28,6 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// لاگین ادمین‌های فرعی
 app.post('/api/login-admin', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -43,51 +42,31 @@ app.post('/api/login-admin', async (req, res) => {
   }
 });
 
-app.get('/api/admins', async (req, res) => {
+app.get('/api/admin-reports', async (req, res) => {
   try {
-    const admins = await Admin.find({});
-    res.json({ success: true, admins });
-  } catch (err) {
-    res.status(500).json({ success: false });
+    const { username } = req.query;
+    if(username === 'Goathszz') {
+      const allAdmins = await Admin.find({});
+      let allReports = [];
+      allAdmins.forEach(adm => allReports.push(...adm.reports));
+      return res.json({ success: true, reports: allReports });
+    }
+
+    const admin = await Admin.findOne({ username });
+    if(admin) {
+      res.json({ success: true, reports: admin.reports });
+    } else {
+      res.json({ success: true, reports: [] });
+    }
+  } catch(e) {
+    res.status(500).json({ success: false, reports: [] });
   }
 });
 
-app.post('/api/admins/add', async (req, res) => {
-  try {
-    const { username, password, volume, days } = req.body;
-    await Admin.create({ username, password, volume, days, reports: [] });
-    res.json({ success: true, message: 'ادمین اضافه شد.' });
-  } catch (err) {
-    res.status(500).json({ success: false, message: 'خطا' });
-  }
-});
-
-app.post('/api/admins/delete', async (req, res) => {
-  try {
-    const { username } = req.body;
-    await Admin.deleteOne({ username });
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ success: false });
-  }
-});
-
-app.post('/api/admins/settle', async (req, res) => {
-  try {
-    const { username } = req.body;
-    await Admin.updateOne({ username }, { $set: { reports: [] } });
-    res.json({ success: true });
-  } catch (err) {
-    res.status(500).json({ success: false });
-  }
-});
-
-// ساخت خودکار نام کاربری و ارتباط با پنل مقصد
 app.post('/api/create-subscription', async (req, res) => {
   try {
     const { volume, days, panelType, adminName } = req.body;
 
-    // تولید نام کاربری بر اساس اسم ادمین + عدد رندوم (مثل Nika_1785862421)
     const randomNum = Math.floor(100000000 + Math.random() * 900000000);
     const prefix = adminName ? adminName : 'Goat';
     const username = `${prefix}_${randomNum}`;
@@ -96,43 +75,36 @@ app.post('/api/create-subscription', async (req, res) => {
 
     if (panelType === 'vip') {
       const panelUrl = "https://sw-r.arazcctv.ir:8000";
-      const apiKey = "rk_0nx9a08Sq9Q2WpHyL3uXtoORel_A8jJXUpg8vRc-IgE";
+      // اصلاح ساختار لینک ساب استاندارد پنل‌های مبتنی بر مارزبان/ربکا
+      // معمولاً لینک اشتراک به شکل زیر است (در صورت نیاز به توکن یا لینک مستقیم)
+      subLink = `${panelUrl}/sub/${username}`;
       
-      // نمونه ارسال به پنل ربکا (در صورت داشتن مسیر دقیق API پَنل، جایگزین می‌شود)
-      /*
-      await axios.post(`${panelUrl}/api/v1/user/add`, {
-        username: username,
-        data_limit: volume,
-        expire_days: days
-      }, {
-        headers: { 'Authorization': `Bearer ${apiKey}` }
-      });
-      */
-     subLink = `${panelUrl}/sub/${username}`;
-
     } else if (panelType === 'normal') {
       const panelUrl = "https://youpanel.temas-arvha.ir:2053";
       subLink = `${panelUrl}/sub/${username}`;
     }
 
-    // ذخیره گزارش در دیتابیس برای ادمین مربوطه
+    const newSub = {
+      username,
+      volume,
+      days,
+      panelType,
+      subLink,
+      date: new Date().toLocaleDateString('fa-IR')
+    };
+
     if(adminName && adminName !== 'Goathszz') {
       await Admin.updateOne(
         { username: adminName },
-        { $push: { reports: { username, volume, days, panelType, date: new Date().toLocaleString('fa-IR') } } }
+        { $push: { reports: newSub } }
       );
     }
 
-    res.json({ 
-      success: true, 
-      username: username,
-      subLink: subLink,
-      message: `اشتراک با موفقیت ساخته شد!` 
-    });
+    res.json({ success: true, username, subLink });
 
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, error: 'خطا در ارتباط با سرور پنل مقصد' });
+    res.status(500).json({ success: false, error: 'خطا در ارتباط با سرور' });
   }
 });
 
