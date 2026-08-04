@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل مدیریت گوت سرور</title>
+    <style>
+        body { font-family: Tahoma, sans-serif; background: #f4f7f6; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        h2 { text-align: center; color: #333; margin-bottom: 20px; }
+        label { display: block; margin-top: 15px; color: #555; font-size: 14px; }
+        input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; background: #28a745; color: white; border: none; padding: 12px; margin-top: 20px; border-radius: 6px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #218838; }
+        #result { margin-top: 15px; text-align: center; font-weight: bold; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>ساخت اشتراک جدید</h2>
+    <form id="subForm">
+        <label>نام کاربری:</label>
+        <input type="text" id="username" required placeholder="مثال: user123">
+
+        <label>حجم (گیگابایت):</label>
+        <input type="number" id="volume" required placeholder="مثال: 30">
+
+        <label>مدت زمان (روز):</label>
+        <input type="number" id="days" required placeholder="مثال: 30">
+
+        <label>نوع پنل:</label>
+        <select id="panelType">
+            <option value="vip">ویژه (ربکا)</option>
+            <option value="normal">عادی (یو پنل)</option>
+        </select>
+
+        <button type="button" onclick="createSub()">ساخت اشتراک</button>
+    </form>
+    <div id="result"></div>
+</div>
+
+<script>
+    async function createSub() {
+        const username = document.getElementById('username').value;
+        const volume = document.getElementById('volume').value;
+        const days = document.getElementById('days').value;
+        const panelType = document.getElementById('panelType').value;
+        const resultDiv = document.getElementById('result');
+
+        resultDiv.style.color = '#000';
+        resultDiv.innerText = 'در حال ارسال درخواست...';
+
+        try {
+            const response = await fetch('/api/create-subscription', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, volume, days, panelType })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                resultDiv.style.color = 'green';
+                resultDiv.innerText = data.message;
+            } else {
+                resultDiv.style.color = 'red';
+                resultDiv.innerText = data.error || 'خطا در انجام عملیات';
+            }
+        } catch (err) {
+            resultDiv.style.color = 'red';
+            resultDiv.innerText = 'خطا در ارتباط با سرور';
+        }
+    }
+</script>
+
+</body>
+</html>
