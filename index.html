@@ -7,11 +7,11 @@
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
     <style>
         :root {
-            --primary: #0284c7;
-            --primary-hover: #0369a1;
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --text-main: #1e293b;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
             --text-muted: #64748b;
             --border: #e2e8f0;
         }
@@ -30,33 +30,26 @@
 
         .container {
             background: var(--card-bg);
-            backdrop-filter: blur(10px);
-            padding: 35px;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
             width: 100%;
-            max-width: 520px;
+            max-width: 480px;
             box-sizing: border-box;
-            animation: fadeIn 0.4s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+            border: 1px solid var(--border);
         }
 
         h2 {
             text-align: center;
             color: var(--primary);
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             font-weight: 700;
-            font-size: 24px;
-            letter-spacing: -0.5px;
+            font-size: 22px;
         }
 
         label {
             display: block;
-            margin-top: 18px;
+            margin-top: 15px;
             color: var(--text-main);
             font-size: 13px;
             font-weight: 600;
@@ -64,22 +57,22 @@
 
         input, select {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             margin-top: 6px;
-            border: 2px solid var(--border);
-            border-radius: 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
             box-sizing: border-box;
             font-family: 'Vazirmatn';
             font-size: 14px;
             background: #f8fafc;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
         }
 
         input:focus, select:focus {
             border-color: var(--primary);
             outline: none;
             background: #fff;
-            box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.15);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         button {
@@ -87,93 +80,56 @@
             background: var(--primary);
             color: white;
             border: none;
-            padding: 14px;
-            margin-top: 25px;
-            border-radius: 12px;
-            font-size: 16px;
+            padding: 13px;
+            margin-top: 20px;
+            border-radius: 10px;
+            font-size: 15px;
             font-family: 'Vazirmatn';
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+            transition: background 0.2s;
         }
 
-        button:hover {
-            background: var(--primary-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(2, 132, 199, 0.4);
-        }
+        button:hover { background: var(--primary-hover); }
 
-        .btn-danger {
-            background: #ef4444;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-            margin-top: 12px;
-        }
+        .btn-danger { background: #ef4444; margin-top: 10px; }
         .btn-danger:hover { background: #dc2626; }
-
-        .btn-warning {
-            background: #f59e0b;
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
-            margin-top: 12px;
-            color: #fff;
-        }
+        .btn-warning { background: #f59e0b; color: #fff; margin-top: 10px; }
         .btn-warning:hover { background: #d97706; }
-
-        .btn-secondary {
-            background: #64748b;
-            box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
-        }
+        .btn-secondary { background: #64748b; margin-top: 10px; }
         .btn-secondary:hover { background: #475569; }
 
-        #result {
-            margin-top: 15px;
-            text-align: center;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
+        #result { margin-top: 15px; text-align: center; font-weight: 600; font-size: 13px; }
         .hidden { display: none !important; }
+
+        .success-box {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            word-break: break-all;
+            text-align: center;
+        }
 
         .admin-card {
             background: #f8fafc;
             border: 1px solid var(--border);
-            padding: 16px;
-            border-radius: 12px;
-            margin-top: 12px;
+            padding: 14px;
+            border-radius: 10px;
+            margin-top: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: all 0.2s;
         }
-        .admin-card:hover {
-            border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-        }
-
-        .admin-actions button {
-            padding: 6px 12px;
-            font-size: 12px;
-            margin: 2px 0;
-            width: auto;
-            display: inline-block;
-        }
-
         .badge {
             display: inline-block;
-            padding: 3px 8px;
+            padding: 2px 8px;
             background: #e0f2fe;
             color: #0369a1;
             border-radius: 6px;
             font-size: 11px;
             font-weight: 600;
-            margin-top: 4px;
-        }
-
-        hr {
-            border: none;
-            height: 1px;
-            background: var(--border);
-            margin: 20px 0;
         }
     </style>
 </head>
@@ -182,126 +138,152 @@
 <div class="container">
     <!-- صفحه لاگین -->
     <div id="loginSection">
-        <h2>مدیریت گوت سرور</h2>
-        <p style="text-align: center; color: var(--text-muted); font-size: 13px; margin-top: -15px; margin-bottom: 25px;">لطفاً برای ورود مشخصات خود را وارد کنید</p>
+        <h2>ورود به پنل گوت سرور</h2>
         <form onsubmit="handleLogin(event)">
             <label>نام کاربری:</label>
-            <input type="text" id="loginUser" required placeholder="آیدی مدیریت">
+            <input type="text" id="loginUser" required placeholder="آیدی ادمین">
 
             <label>رمز عبور:</label>
             <input type="password" id="loginPass" required placeholder="رمز عبور">
 
-            <button type="submit">ورود به سیستم</button>
+            <button type="submit">ورود</button>
         </form>
-        <div id="loginError" style="color: #ef4444; text-align: center; margin-top: 15px; font-size: 13px; font-weight: 600;"></div>
+        <div id="loginError" style="color: #ef4444; text-align: center; margin-top: 12px; font-size: 13px; font-weight: 600;"></div>
     </div>
 
     <!-- پنل اصلی مدیریت -->
     <div id="adminPanel" class="hidden">
-        <h2>داشبورد مدیریت</h2>
+        <h2>ساخت اشتراک جدید</h2>
         
-        <div>
-            <h3 style="color: var(--text-main); font-size: 15px; margin-bottom: 10px;">✨ ساخت اشتراک جدید</h3>
-            <form id="subForm" onsubmit="createSub(event)">
-                <label>نام کاربری:</label>
-                <input type="text" id="username" required placeholder="مثال: user123">
+        <form id="subForm" onsubmit="createSub(event)">
+            <label>حجم (گیگابایت):</label>
+            <input type="number" id="volume" required placeholder="مثال: 30">
 
-                <label>حجم (گیگابایت):</label>
-                <input type="number" id="volume" required placeholder="مثال: 30">
+            <label>مدت زمان (روز):</label>
+            <input type="number" id="days" required placeholder="مثال: 30">
 
-                <label>مدت زمان (روز):</label>
-                <input type="number" id="days" required placeholder="مثال: 30">
+            <label>نوع پنل:</label>
+            <select id="panelType">
+                <option value="vip">ویژه (ربکا - VIP)</option>
+                <option value="normal">عادی (یو پنل - Normal)</option>
+            </select>
 
-                <label>نوع پنل:</label>
-                <select id="panelType">
-                    <option value="vip">ویژه (ربکا - VIP)</option>
-                    <option value="normal">عادی (یو پنل - Normal)</option>
-                </select>
+            <button type="submit">ایجاد اشتراک</button>
+        </form>
+        <div id="result"></div>
+        <div id="subResultBox" class="hidden success-box"></div>
 
-                <button type="submit">ایجاد اشتراک</button>
-            </form>
-            <div id="result"></div>
+        <div style="margin-top: 25px; border-top: 1px solid var(--border); padding-top: 15px;">
+            <button type="button" onclick="openAdminManager()" class="btn-warning">⚙️ مدیریت ادمین‌ها و گزارشات</button>
+            <button type="button" onclick="logout()" class="btn-danger">خروج از حساب</button>
         </div>
-
-        <hr>
-
-        <div>
-            <button type="button" onclick="openAdminManager()" class="btn-warning">⚙️ مدیریت ادمین‌ها، گزارشات و تسویه</button>
-        </div>
-        
-        <button type="button" onclick="logout()" class="btn-danger">خروج از حساب</button>
     </div>
 
     <!-- بخش مدیریت ادمین‌ها -->
     <div id="subAdminManager" class="hidden">
         <h2>مدیریت ادمین‌ها و تسویه</h2>
-        <div style="background: #f1f5f9; padding: 18px; border-radius: 14px; margin-bottom: 20px; border: 1px solid var(--border);">
-            <h4 style="margin: 0 0 12px 0; color: var(--primary); font-size: 14px;">➕ افزودن ادمین جدید</h4>
-            <input type="text" id="newAdminUser" placeholder="آیدی ادمین" style="margin-bottom: 10px;">
-            <input type="password" id="newAdminPass" placeholder="رمز عبور ادمین" style="margin-bottom: 10px;">
-            <input type="number" id="newAdminVolume" placeholder="سهمیه کل حجم (گیگ)" style="margin-bottom: 10px;">
-            <input type="number" id="newAdminDays" placeholder="سهمیه کل روز" style="margin-bottom: 10px;">
-            <button type="button" onclick="addAdmin()" style="margin-top: 5px; background: #0284c7;">ثبت ادمین جدید</button>
+        <div style="background: #f8fafc; padding: 15px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 15px;">
+            <h4 style="margin: 0 0 10px 0; color: var(--primary); font-size: 13px;">➕ افزودن ادمین جدید</h4>
+            <input type="text" id="newAdminUser" placeholder="آیدی ادمین" style="margin-bottom: 8px;">
+            <input type="password" id="newAdminPass" placeholder="رمز عبور" style="margin-bottom: 8px;">
+            <input type="number" id="newAdminVolume" placeholder="سهمیه حجم (GB)" style="margin-bottom: 8px;">
+            <input type="number" id="newAdminDays" placeholder="سهمیه روز" style="margin-bottom: 8px;">
+            <button type="button" onclick="addAdmin()" style="margin-top: 0; background: var(--primary);">ثبت ادمین</button>
         </div>
 
-        <h3 style="font-size: 15px; color: var(--text-main);">لیست ادمین‌ها و گزارشات</h3>
-        <div id="adminsListContainer" style="max-height: 250px; overflow-y: auto;"></div>
+        <h3 style="font-size: 14px;">لیست ادمین‌ها</h3>
+        <div id="adminsListContainer" style="max-height: 200px; overflow-y: auto;"></div>
 
-        <button type="button" onclick="closeAdminManager()" class="btn-secondary" style="margin-top: 20px;">بازگشت به پنل اصلی</button>
+        <button type="button" onclick="closeAdminManager()" class="btn-secondary">بازگشت</button>
     </div>
 </div>
 
 <script>
+    let currentAdmin = '';
+
     function handleLogin(e) {
         e.preventDefault();
         const user = document.getElementById('loginUser').value;
         const pass = document.getElementById('loginPass').value;
 
         if (user === 'Goathszz' && pass === 'Goathszz') {
+            currentAdmin = 'Goathszz';
             document.getElementById('loginSection').classList.add('hidden');
             document.getElementById('adminPanel').classList.remove('hidden');
         } else {
-            document.getElementById('loginError').innerText = '❌ آیدی یا رمز عبور اشتباه است!';
+            // بررسی ادمین‌های فرعی از سرور
+            verifySubAdmin(user, pass);
         }
     }
 
-    function logout() {
-        location.reload();
+    async function verifySubAdmin(username, password) {
+        try {
+            const res = await fetch('/api/login-admin', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await res.json();
+            if(data.success) {
+                currentAdmin = username;
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('adminPanel').classList.remove('hidden');
+            } else {
+                document.getElementById('loginError').innerText = '❌ اطلاعات ورود اشتباه است!';
+            }
+        } catch(err) {
+            document.getElementById('loginError').innerText = '❌ خطا در ارتباط با سرور';
+        }
     }
+
+    function logout() { location.reload(); }
 
     async function createSub(e) {
         e.preventDefault();
-        const username = document.getElementById('username').value;
         const volume = document.getElementById('volume').value;
         const days = document.getElementById('days').value;
         const panelType = document.getElementById('panelType').value;
         const resultDiv = document.getElementById('result');
+        const subBox = document.getElementById('subResultBox');
 
-        resultDiv.style.color = '#0284c7';
-        resultDiv.innerText = '⏳ در حال ارسال درخواست به سرور...';
+        resultDiv.style.color = varColor('--primary');
+        resultDiv.innerText = '⏳ در حال ساخت اشتراک...';
+        subBox.classList.add('hidden');
 
         try {
             const response = await fetch('/api/create-subscription', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, volume, days, panelType, adminName: 'Goathszz' })
+                body: JSON.stringify({ volume, days, panelType, adminName: currentAdmin })
             });
 
             const data = await response.json();
             if (data.success) {
                 resultDiv.style.color = '#16a34a';
-                resultDiv.innerText = data.message;
+                resultDiv.innerText = '✅ اشتراک با موفقیت ساخته شد!';
+                subBox.innerHTML = `
+                    <strong>نام کاربری:</strong> ${data.username}<br><br>
+                    <a href="${data.subLink}" target="_blank" style="color:var(--primary); font-weight:bold;">🔗 لینک اشتراک (Sub Link)</a><br><br>
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(data.subLink)}" alt="QR Code" style="border-radius:8px;">
+                `;
+                subBox.classList.remove('hidden');
             } else {
                 resultDiv.style.color = '#dc2626';
-                resultDiv.innerText = data.error || 'خطا در انجام عملیات';
+                resultDiv.innerText = data.error || 'خطا در ساخت اشتراک';
             }
         } catch (err) {
             resultDiv.style.color = '#dc2626';
-            resultDiv.innerText = '❌ خطا در ارتباط با سرور';
+            resultDiv.innerText = '❌ خطا در ارتباط با سرور مقصد';
         }
     }
 
+    function varColor(name) { return '#2563eb'; }
+
     function openAdminManager() {
+        if(currentAdmin !== 'Goathszz') {
+            alert('فقط مدیر کل به این بخش دسترسی دارد!');
+            return;
+        }
         document.getElementById('adminPanel').classList.add('hidden');
         document.getElementById('subAdminManager').classList.remove('hidden');
         loadAdmins();
@@ -314,35 +296,30 @@
 
     async function loadAdmins() {
         const container = document.getElementById('adminsListContainer');
-        container.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-size:13px;">در حال دریافت اطلاعات...</p>';
-        
+        container.innerHTML = '<p style="text-align:center; color:#64748b; font-size:12px;">در حال بارگذاری...</p>';
         try {
             const res = await fetch('/api/admins');
             const data = await res.json();
             container.innerHTML = '';
-            
             if(data.admins && data.admins.length > 0) {
                 data.admins.forEach(adm => {
                     container.innerHTML += `
                         <div class="admin-card">
                             <div>
-                                <strong style="color:var(--text-main);">${adm.username}</strong><br>
-                                <span class="badge">حجم: ${adm.volume}GB | روز: ${adm.days}</span><br>
-                                <small style="color: var(--text-muted); display:inline-top; margin-top:4px;">گزارشات ثبت‌شده: ${adm.reports ? adm.reports.length : 0}</small>
+                                <strong>${adm.username}</strong><br>
+                                <span class="badge">حجم: ${adm.volume}GB | روز: ${adm.days}</span>
                             </div>
-                            <div class="admin-actions">
-                                <button onclick="settleAdmin('${adm.username}')" style="background: #16a34a;">تسویه (پاکسازی)</button><br>
-                                <button onclick="deleteAdmin('${adm.username}')" style="background: #ef4444;">حذف</button>
+                            <div>
+                                <button onclick="settleAdmin('${adm.username}')" style="padding:4px 8px; font-size:11px; background:#16a34a; width:auto; margin:0;">تسویه</button>
+                                <button onclick="deleteAdmin('${adm.username}')" style="padding:4px 8px; font-size:11px; background:#ef4444; width:auto; margin:2px 0 0 0;">حذف</button>
                             </div>
                         </div>
                     `;
                 });
             } else {
-                container.innerHTML = '<p style="text-align:center; color:var(--text-muted); font-size:13px;">هیچ ادمینی ثبت نشده است.</p>';
+                container.innerHTML = '<p style="text-align:center; color:#64748b; font-size:12px;">هیچ ادمینی نیست.</p>';
             }
-        } catch(e) {
-            container.innerHTML = '<p style="text-align:center; color:#ef4444; font-size:13px;">خطا در دریافت لیست ادمین‌ها</p>';
-        }
+        } catch(e) {}
     }
 
     async function addAdmin() {
@@ -350,12 +327,7 @@
         const password = document.getElementById('newAdminPass').value;
         const volume = document.getElementById('newAdminVolume').value;
         const days = document.getElementById('newAdminDays').value;
-
-        if(!username || !password) {
-            alert('لطفاً آیدی و رمز را وارد کنید');
-            return;
-        }
-
+        if(!username || !password) return alert('اطلاعات کامل وارد کنید');
         const res = await fetch('/api/admins/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -367,7 +339,7 @@
     }
 
     async function deleteAdmin(username) {
-        if(!confirm(`آیا از حذف ${username} مطمئن هستید؟`)) return;
+        if(!confirm('حذف شود؟')) return;
         await fetch('/api/admins/delete', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -377,7 +349,7 @@
     }
 
     async function settleAdmin(username) {
-        if(!confirm(`تسویه حساب برای ${username} انجام شود و گزارشات او پاک شوند؟`)) return;
+        if(!confirm('تسویه حساب و پاکسازی گزارشات؟')) return;
         await fetch('/api/admins/settle', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
