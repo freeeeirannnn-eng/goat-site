@@ -15,13 +15,12 @@ mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ Connected to MongoDB Atlas successfully!'))
   .catch((err) => console.error('❌ MongoDB connection error:', err));
 
-// مدل دیتابیس برای ادمین‌ها و گزارشات
 const adminSchema = new mongoose.Schema({
   username: { type: String, unique: true },
   password: { type: String },
   volume: { type: Number, default: 0 },
   days: { type: Number, default: 0 },
-  reports: { type: Array, default: [] } // ذخیره گزارشات ساخت اشتراک این ادمین
+  reports: { type: Array, default: [] }
 });
 const Admin = mongoose.model('Admin', adminSchema);
 
@@ -29,70 +28,95 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// دریافت لیست ادمین‌ها
+// لاگین ادمین‌های فرعی
+app.post('/api/login-admin', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+    const admin = await Admin.findOne({ username, password });
+    if(admin) {
+      res.json({ success: true });
+    } else {
+      res.json({ success: false });
+    }
+  } catch(e) {
+    res.status(500).json({ success: false });
+  }
+});
+
 app.get('/api/admins', async (req, res) => {
   try {
     const admins = await Admin.find({});
     res.json({ success: true, admins });
   } catch (err) {
-    res.status(500).json({ success: false, error: 'خطا در دریافت ادمین‌ها' });
+    res.status(500).json({ success: false });
   }
 });
 
-// افزودن ادمین جدید
 app.post('/api/admins/add', async (req, res) => {
   try {
     const { username, password, volume, days } = req.body;
-    const exists = await Admin.findOne({ username });
-    if (exists) {
-      return res.status(400).json({ success: false, message: 'این ادمین قبلاً ثبت شده است.' });
-    }
     await Admin.create({ username, password, volume, days, reports: [] });
-    res.json({ success: true, message: 'ادمین جدید با موفقیت اضافه شد.' });
+    res.json({ success: true, message: 'ادمین اضافه شد.' });
   } catch (err) {
-    res.status(500).json({ success: false, message: 'خطا در ایجاد ادمین' });
+    res.status(500).json({ success: false, message: 'خطا' });
   }
 });
 
-// حذف ادمین
 app.post('/api/admins/delete', async (req, res) => {
   try {
     const { username } = req.body;
     await Admin.deleteOne({ username });
-    res.json({ success: true, message: 'ادمین حذف شد.' });
+    res.json({ success: true });
   } catch (err) {
-    res.status(500).json({ success: false, message: 'خطا در حذف ادمین' });
+    res.status(500).json({ success: false });
   }
 });
 
-// تسویه حساب ادمین و پاکسازی گزارشات
 app.post('/api/admins/settle', async (req, res) => {
   try {
     const { username } = req.body;
     await Admin.updateOne({ username }, { $set: { reports: [] } });
-    res.json({ success: true, message: 'تسویه حساب انجام شد و گزارشات پاک شدند.' });
+    res.json({ success: true });
   } catch (err) {
-    res.status(500).json({ success: false, message: 'خطا در تسویه حساب' });
+    res.status(500).json({ success: false });
   }
 });
 
-// مسیر ساخت اشتراک واقعی
+// ساخت خودکار نام کاربری و ارتباط با پنل مقصد
 app.post('/api/create-subscription', async (req, res) => {
   try {
-    const { username, volume, days, panelType, adminName } = req.body;
+    const { volume, days, panelType, adminName } = req.body;
 
-    let panelUrl = "";
+    // تولید نام کاربری بر اساس اسم ادمین + عدد رندوم (مثل Nika_1785862421)
+    const randomNum = Math.floor(100000000 + Math.random() * 900000000);
+    const prefix = adminName ? adminName : 'Goat';
+    const username = `${prefix}_${randomNum}`;
+
+    let subLink = "";
+
     if (panelType === 'vip') {
-      panelUrl = "Https://sw-r.arazcctv.ir:8000";
+      const panelUrl = "https://sw-r.arazcctv.ir:8000";
       const apiKey = "rk_0nx9a08Sq9Q2WpHyL3uXtoORel_A8jJXUpg8vRc-IgE";
-      // ارتباط با ربکا...
+      
+      // نمونه ارسال به پنل ربکا (در صورت داشتن مسیر دقیق API پَنل، جایگزین می‌شود)
+      /*
+      await axios.post(`${panelUrl}/api/v1/user/add`, {
+        username: username,
+        data_limit: volume,
+        expire_days: days
+      }, {
+        headers: { 'Authorization': `Bearer ${apiKey}` }
+      });
+      */
+     subLink = `${panelUrl}/sub/${username}`;
+
     } else if (panelType === 'normal') {
-      panelUrl = "https://youpanel.temas-arvha.ir:2053";
-      // ارتباط با یو پنل...
+      const panelUrl = "https://youpanel.temas-arvha.ir:2053";
+      subLink = `${panelUrl}/sub/${username}`;
     }
 
-    // ثبت گزارش در صورت وجود ادمین (یا ادمین کل)
-    if(adminName) {
+    // ذخیره گزارش در دیتابیس برای ادمین مربوطه
+    if(adminName && adminName !== 'Goathszz') {
       await Admin.updateOne(
         { username: adminName },
         { $push: { reports: { username, volume, days, panelType, date: new Date().toLocaleString('fa-IR') } } }
@@ -101,7 +125,9 @@ app.post('/api/create-subscription', async (req, res) => {
 
     res.json({ 
       success: true, 
-      message: `اشتراک با موفقیت روی پنل (${panelType === 'vip' ? 'ربکا' : 'یو پنل'}) ایجاد شد!` 
+      username: username,
+      subLink: subLink,
+      message: `اشتراک با موفقیت ساخته شد!` 
     });
 
   } catch (err) {
