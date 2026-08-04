@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rebeka Panel — Enterprise VPN Management</title>
-    <!-- Tailwind CSS Play CDN & Inter Font -->
+    <title>گود سرور — مدیریت یکپارچه اشتراک‌ها</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -14,226 +13,139 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: '#4F46E5',
-                        secondary: '#6366F1',
-                        success: '#22C55E',
-                        danger: '#EF4444',
-                        warning: '#F59E0B',
-                        darkBg: '#0F172A',
-                        darkCard: '#111827',
-                        lightBg: '#F8FAFC',
+                        primary: '#4F46E5', secondary: '#6366F1', success: '#22C55E', danger: '#EF4444', warning: '#F59E0B',
+                        darkBg: '#0F172A', darkCard: '#111827', lightBg: '#F8FAFC',
                     },
-                    fontFamily: {
-                        sans: ['Inter', 'Vazirmatn', 'sans-serif'],
-                    },
-                    boxShadow: {
-                        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
-                        'soft': '0 10px 30px -5px rgba(0, 0, 0, 0.05)',
-                        'glow': '0 0 25px -5px rgba(79, 70, 229, 0.4)',
-                    }
+                    fontFamily: { sans: ['Inter', 'Vazirmatn', 'sans-serif'] },
+                    boxShadow: { 'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)', 'glow': '0 0 25px -5px rgba(79, 70, 229, 0.4)' }
                 }
             }
         }
     </script>
     <style>
-        .glass-panel {
-            background: rgba(17, 24, 39, 0.7);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .light .glass-panel {
-            background: rgba(255, 255, 255, 0.85);
-            border: 1px solid rgba(0, 0, 0, 0.06);
-        }
-        .gradient-border {
-            background: linear-gradient(135deg, #4F46E5, #6366F1, #9333EA);
-        }
-        .gradient-text {
-            background: linear-gradient(135deg, #6366F1, #A855F7, #EC4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        .glass-panel { background: rgba(17, 24, 39, 0.75); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .gradient-border { background: linear-gradient(135deg, #4F46E5, #6366F1, #9333EA); }
+        .gradient-text { background: linear-gradient(135deg, #6366F1, #A855F7, #EC4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
-<body class="bg-lightBg dark:bg-darkBg text-slate-900 dark:text-slate-100 font-sans antialiased selection:bg-primary selection:text-white transition-colors duration-300">
+<body class="bg-darkBg text-slate-100 font-sans antialiased">
 
-    <!-- LOGIN MODAL / OVERLAY (در صورت نیاز به احراز هویت) -->
-    <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-darkBg/90 backdrop-blur-md hidden">
+    <!-- صفحه لاگین (گود سرور) -->
+    <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-darkBg/95 backdrop-blur-xl">
         <div class="glass-panel p-8 rounded-3xl w-full max-w-md border border-slate-800 shadow-glass space-y-6">
             <div class="text-center space-y-2">
                 <div class="w-12 h-12 rounded-2xl gradient-border mx-auto flex items-center justify-center shadow-glow">
                     <i data-lucide="shield-check" class="w-6 h-6 text-white"></i>
                 </div>
-                <h2 class="text-xl font-bold text-white">ورود به پنل مدیریت Rebeka</h2>
-                <p class="text-xs text-slate-400">لطفاً اطلاعات کاربری خود را وارد کنید</p>
+                <h1 class="text-2xl font-bold gradient-text">گود سرور</h1>
+                <p class="text-xs text-slate-400">لطفاً نام کاربری و رمز عبور خود را وارد کنید</p>
             </div>
-            <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+            <form onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
                     <label class="text-xs font-semibold text-slate-300">نام کاربری</label>
-                    <input type="text" id="login-username" required class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-primary">
+                    <input type="text" id="login-user" required class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-primary">
                 </div>
                 <div>
                     <label class="text-xs font-semibold text-slate-300">رمز عبور</label>
-                    <input type="password" id="login-password" required class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-primary">
+                    <input type="password" id="login-pass" required class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-200 focus:outline-none focus:border-primary">
                 </div>
                 <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-primary to-secondary text-white text-xs font-bold shadow-glow hover:opacity-95 transition-all">
-                    ورود به سیستم
+                    ورود به پنل
                 </button>
             </form>
         </div>
     </div>
 
-    <div class="flex h-screen overflow-hidden">
-
-        <!-- SIDEBAR -->
-        <aside id="sidebar" class="hidden md:flex flex-col w-64 glass-panel border-r border-slate-200 dark:border-slate-800 transition-all duration-300 z-30">
-            <div class="flex items-center justify-between px-6 py-5 border-b border-slate-200/50 dark:border-slate-800/50">
+    <div class="flex h-screen overflow-hidden hidden" id="app-container">
+        
+        <!-- سایدبار داینامیک بر اساس سطح دسترسی -->
+        <aside class="flex flex-col w-64 glass-panel border-r border-slate-800 z-30">
+            <div class="flex items-center justify-between px-6 py-5 border-b border-slate-800">
                 <div class="flex items-center space-x-3 space-x-reverse">
                     <div class="w-9 h-9 rounded-xl gradient-border flex items-center justify-center shadow-glow">
-                        <i data-lucide="shield-check" class="w-5 h-5 text-white"></i>
+                        <i data-lucide="server" class="w-5 h-5 text-white"></i>
                     </div>
                     <div>
-                        <h1 class="font-bold text-base tracking-tight gradient-text">Rebeka Panel</h1>
-                        <span class="text-[10px] text-slate-400 font-medium tracking-wide">Enterprise v2.8</span>
+                        <h2 class="font-bold text-base gradient-text">گود سرور</h2>
+                        <span class="text-[10px] text-slate-400" id="sidebar-role-title">پنل ادمین</span>
                     </div>
                 </div>
             </div>
 
-            <nav class="flex-1 px-4 py-4 space-y-1.5 overflow-y-auto no-scrollbar">
-                <a href="#dashboard" onclick="switchTab('dashboard')" class="nav-link flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium text-white bg-gradient-to-r from-primary to-secondary shadow-glow transition-all">
-                    <i data-lucide="layout-dashboard" class="w-4 h-4 ml-3"></i> داشبورد
-                </a>
-                <a href="#users" onclick="switchTab('users')" class="nav-link flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all">
-                    <i data-lucide="users" class="w-4 h-4 ml-3"></i> کاربران و اشتراک‌ها
-                </a>
-                <a href="#create-user" onclick="switchTab('create-user')" class="nav-link flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all">
-                    <i data-lucide="user-plus" class="w-4 h-4 ml-3"></i> ساخت اشتراک جدید
-                </a>
-                <a href="#nodes" onclick="switchTab('nodes')" class="nav-link flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all">
-                    <i data-lucide="server" class="w-4 h-4 ml-3"></i> مدیریت نودها
-                </a>
-                <a href="#settings" onclick="switchTab('settings')" class="nav-link flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white hover:bg-slate-800/50 transition-all">
-                    <i data-lucide="settings" class="w-4 h-4 ml-3"></i> تنظیمات سیستم
-                </a>
+            <!-- منوها بر اساس ادمین کل یا ادمین عادی تغییر می‌کند -->
+            <nav id="sidebar-nav" class="flex-1 px-4 py-4 space-y-1.5 overflow-y-auto no-scrollbar">
+                <!-- پرینت داینامیک توسط جاوااسکریپت -->
             </nav>
 
-            <div class="p-4 border-t border-slate-200/50 dark:border-slate-800/50">
+            <div class="p-4 border-t border-slate-800">
                 <div class="flex items-center justify-between p-2 rounded-xl bg-slate-900/40 border border-slate-800">
                     <div class="flex items-center space-x-3 space-x-reverse">
-                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center text-white font-bold text-xs" id="admin-avatar-initial">
-                            RP
-                        </div>
+                        <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-xs" id="user-initial">GS</div>
                         <div>
-                            <p class="text-xs font-semibold text-white" id="current-admin-name">Rebeka Admin</p>
-                            <p class="text-[10px] text-emerald-400 flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block ml-1 animate-pulse"></span> آنلاین</p>
+                            <p class="text-xs font-semibold text-white" id="display-username">کاربر</p>
+                            <p class="text-[10px] text-emerald-400">آنلاین</p>
                         </div>
                     </div>
-                    <button onclick="logout()" class="text-slate-400 hover:text-danger transition-colors" title="خروج">
-                        <i data-lucide="log-out" class="w-4 h-4"></i>
-                    </button>
+                    <button onclick="logout()" class="text-slate-400 hover:text-danger"><i data-lucide="log-out" class="w-4 h-4"></i></button>
                 </div>
             </div>
         </aside>
 
-        <!-- MAIN CONTENT AREA -->
+        <!-- بخش محتوای اصلی -->
         <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
-            
-            <header class="h-16 glass-panel border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 z-20 shrink-0">
-                <div class="flex items-center space-x-4 space-x-reverse">
-                    <div class="relative hidden sm:block w-72">
-                        <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute right-3.5 top-3"></i>
-                        <input type="text" placeholder="جستجوی سریع..." class="w-full bg-slate-900/50 border border-slate-800 rounded-xl pr-10 pl-4 py-2 text-xs text-slate-200 focus:outline-none focus:border-primary">
-                    </div>
-                </div>
-                <div class="flex items-center space-x-3 space-x-reverse">
-                    <button onclick="toggleTheme()" class="w-9 h-9 rounded-xl bg-slate-800/50 border border-slate-700/50 flex items-center justify-center text-slate-300 hover:text-white transition-all">
-                        <i id="theme-icon" data-lucide="moon" class="w-4 h-4"></i>
-                    </button>
-                    <button onclick="switchTab('create-user')" class="hidden sm:flex items-center space-x-2 space-x-reverse bg-gradient-to-r from-primary to-secondary text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-glow hover:opacity-95 transition-all">
-                        <i data-lucide="plus" class="w-4 h-4"></i>
-                        <span>ساخت اشتراک جدید</span>
-                    </button>
-                </div>
+            <header class="h-16 glass-panel border-b border-slate-800 flex items-center justify-between px-6 z-20 shrink-0">
+                <h3 class="text-sm font-bold text-white" id="header-title">داشبورد مدیریت</h3>
+                <button onclick="logout()" class="text-xs bg-slate-800 px-3 py-1.5 rounded-lg text-slate-300 hover:text-white">خروج از حساب</button>
             </header>
 
-            <main id="main-viewport" class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 pb-24 md:pb-8">
+            <main id="main-viewport" class="flex-1 overflow-y-auto p-6 space-y-6">
                 
-                <!-- TAB 1: DASHBOARD -->
-                <div id="tab-dashboard" class="space-y-6 tab-content">
-                    <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary/20 via-secondary/10 to-purple-600/20 border border-primary/30 p-6 sm:p-8 shadow-glass">
-                        <h2 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">خوش آمدید، مدیر عزیز 👋</h2>
-                        <p class="text-slate-400 text-xs sm:text-sm mt-1">پنل مدیریت پیشرفته Rebeka و اتصال به پایگاه داده MongoDB آماده به کار است.</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div class="glass-panel p-5 rounded-2xl border border-slate-800">
-                            <p class="text-slate-400 text-xs">کل اشتراک‌های ثبت‌شده</p>
-                            <h3 id="stat-total-subs" class="text-2xl font-bold text-white mt-2">۰</h3>
-                        </div>
-                        <div class="glass-panel p-5 rounded-2xl border border-slate-800">
-                            <p class="text-slate-400 text-xs">وضعیت اتصال دیتابیس</p>
-                            <h3 class="text-2xl font-bold text-success mt-2">متصل (MongoDB)</h3>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- TAB 2: USERS & SUBSCRIPTIONS -->
-                <div id="tab-users" class="space-y-6 tab-content hidden">
-                    <div class="flex justify-between items-center">
-                        <h2 class="text-xl font-bold text-white">لیست اشتراک‌های ثبت‌شده در دیتابیس</h2>
-                        <button onclick="loadSubscriptions()" class="px-4 py-2 rounded-xl bg-slate-800 text-xs text-white">بروزرسانی لیست</button>
-                    </div>
-                    <div id="subscriptions-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <!-- اینجا اشتراک‌ها از طریق جی‌اس و دیتابیس لود می‌شوند -->
-                    </div>
-                </div>
-
-                <!-- TAB 3: CREATE USER WIZARD -->
-                <div id="tab-create-user" class="space-y-6 tab-content hidden max-w-2xl mx-auto">
-                    <div class="text-center">
-                        <h2 class="text-2xl font-bold text-white">ساخت اشتراک جدید VPN</h2>
-                        <p class="text-xs text-slate-400 mt-1">ثبت خودکار در دیتابیس با نام کاربری رندوم</p>
-                    </div>
-
-                    <form onsubmit="handleCreateSubscription(event)" class="glass-panel p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-glass space-y-6">
-                        <div class="space-y-2">
-                            <label class="text-xs font-semibold text-slate-300">نام کاربری اختصاصی:</label>
-                            <div class="flex space-x-2 space-x-reverse">
-                                <input type="text" id="auto-username" readonly class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-200 font-mono">
-                                <button type="button" onclick="generateRandomUsername()" class="px-4 py-2.5 rounded-xl bg-slate-800 text-xs text-white">تولید تصادفی</button>
+                <!-- تب ۱: خانه / ساخت اشتراک (مخصوص ادمین‌ها) -->
+                <div id="tab-home" class="space-y-6 tab-content">
+                    <div class="max-w-2xl mx-auto glass-panel p-8 rounded-3xl border border-slate-800 shadow-glass space-y-6">
+                        <h2 class="text-xl font-bold text-white">ساخت اشتراک جدید (از طریق پنل ربکا)</h2>
+                        <form onsubmit="createSubscription(event)" class="space-y-4">
+                            <div>
+                                <label class="text-xs font-semibold text-slate-300">انتخاب پنل مقصد:</label>
+                                <select id="panel-source" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-200">
+                                    <option value="rebeka_vip">VIP ربکا (فول سرعت)</option>
+                                    <option value="normal_upanel">یو پنل (استاندارد)</option>
+                                </select>
                             </div>
-                        </div>
-
-                        <div class="space-y-2">
-                            <label class="text-xs font-semibold text-slate-300">انتخاب پنل / سرویس:</label>
-                            <select id="panel-type" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-200">
-                                <option value="VIP Rebeka">VIP ربکا (فول سرعت)</option>
-                                <option value="Normal UPanel">یو پنل (استاندارد)</option>
-                            </select>
-                        </div>
-
-                        <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-primary to-secondary text-white text-sm font-bold shadow-glow hover:opacity-95 transition-all">
-                            ایجاد و ذخیره در دیتابیس
-                        </button>
-                    </form>
-                </div>
-
-                <!-- TAB 4: NODES -->
-                <div id="tab-nodes" class="space-y-6 tab-content hidden">
-                    <h2 class="text-xl font-bold text-white">مدیریت نودها</h2>
-                    <div class="glass-panel p-6 rounded-2xl border border-slate-800">
-                        <p class="text-xs text-slate-300">تمامی نودهای سرور فعال و متصل به هسته مرکزی پایدار هستند.</p>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="text-xs font-semibold text-slate-300">حجم ترافیک (گیگابایت):</label>
+                                    <input type="number" id="sub-traffic" value="30" required class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-200">
+                                </div>
+                                <div>
+                                    <label class="text-xs font-semibold text-slate-300">مدت زمان (روز):</label>
+                                    <input type="number" id="sub-days" value="30" required class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-200">
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-primary to-secondary text-white text-xs font-bold shadow-glow">
+                                ارسال درخواست ساخت به پنل ربکا و ذخیره
+                            </button>
+                        </form>
                     </div>
                 </div>
 
-                <!-- TAB 5: SETTINGS -->
-                <div id="tab-settings" class="space-y-6 tab-content hidden max-w-2xl mx-auto">
-                    <h2 class="text-xl font-bold text-white">تنظیمات سیستم</h2>
-                    <div class="glass-panel p-6 rounded-3xl border border-slate-800 space-y-4">
-                        <p class="text-xs text-slate-400">پنل مدیریت یکپارچه Rebeka - نسخه Enterprise v2.8</p>
+                <!-- تب ۲: اشتراک‌های من (مخصوص ادمین‌ها) -->
+                <div id="tab-my-subs" class="space-y-6 tab-content hidden">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-xl font-bold text-white">اشتراک‌های ثبت‌شده شما</h2>
+                        <button onclick="loadMySubscriptions()" class="px-3 py-1.5 rounded-lg bg-slate-800 text-xs">بروزرسانی</button>
+                    </div>
+                    <div id="my-subs-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <!-- لود داینامیک اشتراک‌ها -->
+                    </div>
+                </div>
+
+                <!-- تب مدیریت کل (مخصوص Goathszz) -->
+                <div id="tab-super-admin" class="space-y-6 tab-content hidden">
+                    <h2 class="text-xl font-bold text-white">پنل مدیریت کل (گزارش تمام ادمین‌ها)</h2>
+                    <div id="all-reports-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- گزارش کامل تمام اشتراک‌های کل ادمین‌ها -->
                     </div>
                 </div>
 
@@ -241,87 +153,150 @@
         </div>
     </div>
 
-    <div id="toast-container" class="fixed top-5 left-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+    <!-- مدال نمایش QR Code و لینک ساب -->
+    <div id="qr-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-darkBg/80 backdrop-blur-sm hidden">
+        <div class="glass-panel p-6 rounded-3xl w-full max-w-md border border-slate-800 text-center space-y-4">
+            <h3 class="font-bold text-white text-base">جزئیات اتصال اشتراک</h3>
+            <div id="qr-code-box" class="bg-white p-4 rounded-2xl w-48 h-48 mx-auto flex items-center justify-center">
+                <!-- بارکد / QR کد -->
+                <img id="qr-img" src="" alt="QR Code" class="w-full h-full object-contain">
+            </div>
+            <div>
+                <label class="text-[10px] text-slate-400">لینک اشتراک اختصاصی (Sub Link):</label>
+                <input type="text" id="modal-sub-link" readonly class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-primary font-mono mt-1">
+            </div>
+            <button onclick="document.getElementById('qr-modal').classList.add('hidden')" class="w-full py-2 bg-slate-800 rounded-xl text-xs text-white">بستن</button>
+        </div>
+    </div>
 
     <script>
         lucide.createIcons();
+        let currentUser = null;
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
-            const target = document.getElementById(`tab-${tabId}`);
-            if (target) target.classList.remove('hidden');
-            if(tabId === 'users') loadSubscriptions();
-            if(tabId === 'create-user') generateRandomUsername();
-            lucide.createIcons();
-        }
-
-        function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `pointer-events-auto flex items-center space-x-3 space-x-reverse px-4 py-3 rounded-xl border shadow-glass text-xs font-semibold bg-slate-900 border-emerald-500 text-white transition-all`;
-            toast.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 text-primary shrink-0"><span>${message}</span>`;
-            container.appendChild(toast);
-            lucide.createIcons();
-            setTimeout(() => toast.remove(), 3000);
-        }
-
-        function generateRandomUsername() {
-            const rand = Math.floor(100000 + Math.random() * 900000);
-            document.getElementById('auto-username').value = `Rebeka_${rand}`;
-        }
-
-        // ارتباط با بک‌اند (Node.js/Express)
-        async function loadSubscriptions() {
-            try {
-                const res = await fetch('/api/subscriptions');
-                const subs = await res.json();
-                const container = document.getElementById('subscriptions-container');
-                document.getElementById('stat-total-subs').innerText = subs.length;
-                
-                container.innerHTML = '';
-                subs.forEach(sub => {
-                    container.innerHTML += `
-                        <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-3">
-                            <h4 class="font-bold text-sm text-white">${sub.username}</h4>
-                            <p class="text-xs text-slate-400">پنل: ${sub.panelType || 'VIP'}</p>
-                            <p class="text-[11px] font-mono text-primary truncate">لینک: ${sub.subLink}</p>
-                            <span class="px-2 py-0.5 rounded bg-success/10 text-success text-[10px] font-bold">فعال</span>
-                        </div>
-                    `;
-                });
-            } catch (err) {
-                showToast('خطا در بارگذاری اطلاعات از دیتابیس', 'danger');
-            }
-        }
-
-        async function handleCreateSubscription(e) {
+        async function handleLogin(e) {
             e.preventDefault();
-            const username = document.getElementById('auto-username').value;
-            const panelType = document.getElementById('panel-type').value;
+            const username = document.getElementById('login-user').value;
+            const password = document.getElementById('login-pass').value;
 
             try {
-                const res = await fetch('/api/subscriptions', {
+                const res = await fetch('/api/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, panelType })
+                    body: JSON.stringify({ username, password })
                 });
+                const data = await res.json();
+
                 if(res.ok) {
-                    showToast('اشتراک با موفقیت در دیتابیس ثبت شد!');
-                    switchTab('users');
+                    currentUser = data.user; // شامل نقش و نام کاربری
+                    document.getElementById('login-modal').classList.add('hidden');
+                    document.getElementById('app-container').classList.remove('hidden');
+                    document.getElementById('display-username').innerText = currentUser.username;
+                    document.getElementById('user-initial').innerText = currentUser.username.charAt(0).toUpperCase();
+                    
+                    setupNavigation();
                 } else {
-                    showToast('خطا در ثبت اشتراک', 'danger');
+                    alert(data.message || 'خطا در اطلاعات ورود');
                 }
             } catch(err) {
-                showToast('خطای ارتباط با سرور', 'danger');
+                alert('خطا در ارتباط با سرور');
             }
         }
 
-        let isDarkMode = true;
-        function toggleTheme() {
-            isDarkMode = !isDarkMode;
-            document.documentElement.classList.toggle('dark', isDarkMode);
-            document.documentElement.classList.toggle('light', !isDarkMode);
+        function setupNavigation() {
+            const nav = document.getElementById('sidebar-nav');
+            nav.innerHTML = '';
+
+            if(currentUser.role === 'super_admin') {
+                document.getElementById('sidebar-role-title').innerText = 'مدیر کل (Goathszz)';
+                nav.innerHTML = `
+                    <a href="#super" onclick="switchTab('super-admin')" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium text-white bg-primary">
+                        <i data-lucide="shield" class="w-4 h-4 ml-3"></i> گزارش کل سیستم
+                    </a>
+                `;
+                switchTab('super-admin');
+            } else {
+                document.getElementById('sidebar-role-title').innerText = 'پنل ادمین گود سرور';
+                nav.innerHTML = `
+                    <a href="#home" onclick="switchTab('home')" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium text-white bg-primary">
+                        <i data-lucide="plus-circle" class="w-4 h-4 ml-3"></i> ساخت اشتراک
+                    </a>
+                    <a href="#mysubs" onclick="switchTab('my-subs')" class="flex items-center px-3.5 py-2.5 rounded-xl text-sm font-medium text-slate-400 hover:text-white">
+                        <i data-lucide="list" class="w-4 h-4 ml-3"></i> اشتراک‌های من
+                    </a>
+                `;
+                switchTab('home');
+            }
+            lucide.createIcons();
         }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            if(tabId === 'my-subs') loadMySubscriptions();
+            if(tabId === 'super-admin') loadSuperAdminData();
+        }
+
+        async function createSubscription(e) {
+            e.preventDefault();
+            const panelType = document.getElementById('panel-source').value;
+            const traffic = document.getElementById('sub-traffic').value;
+            const days = document.getElementById('sub-days').value;
+
+            const res = await fetch('/api/subscriptions', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ adminName: currentUser.username, panelType, traffic, days })
+            });
+            if(res.ok) {
+                alert('اشتراک با موفقیت در پنل ربکا ساخته و ذخیره شد!');
+                switchTab('my-subs');
+            } else {
+                alert('خطا در ساخت اشتراک');
+            }
+        }
+
+        async function loadMySubscriptions() {
+            const res = await fetch(`/api/subscriptions?admin=${currentUser.username}`);
+            const subs = await res.json();
+            const grid = document.getElementById('my-subs-grid');
+            grid.innerHTML = '';
+            
+            subs.forEach(sub => {
+                grid.innerHTML += `
+                    <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-3 cursor-pointer hover:border-primary" onclick='showSubDetails(${JSON.stringify(sub)})'>
+                        <h4 class="font-bold text-sm text-white">${sub.username}</h4>
+                        <p class="text-xs text-slate-400">سرویس: ${sub.panelType}</p>
+                        <p class="text-xs text-emerald-400">حجم: ${sub.traffic}GB | اعتبار: ${sub.days} روز</p>
+                        <span class="text-[10px] bg-primary/20 text-primary px-2 py-0.5 rounded">کلیک برای مشاهده QR و لینک ساب</span>
+                    </div>
+                `;
+            });
+        }
+
+        function showSubDetails(sub) {
+            document.getElementById('modal-sub-link').value = sub.subLink;
+            // ساخت QR کد آنلاین بر اساس لینک ساب
+            document.getElementById('qr-img').src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(sub.subLink)}`;
+            document.getElementById('qr-modal').classList.remove('hidden');
+        }
+
+        async function loadSuperAdminData() {
+            const res = await fetch('/api/all-subscriptions');
+            const data = await res.json();
+            const container = document.getElementById('all-reports-container');
+            container.innerHTML = '';
+            data.forEach(item => {
+                container.innerHTML += `
+                    <div class="glass-panel p-4 rounded-2xl border border-slate-800 space-y-2">
+                        <p class="text-xs font-bold text-primary">ادمین سازنده: ${item.adminName}</p>
+                        <p class="text-xs text-white">نام کاربری اشتراک: ${item.username}</p>
+                        <p class="text-[11px] text-slate-400">پنل: ${item.panelType} | تاریخ ایجاد: ${new Date(item.createdAt).toLocaleDateString('fa-IR')}</p>
+                    </div>
+                `;
+            });
+        }
+
+        function logout() { location.reload(); }
     </script>
 </body>
 </html>
